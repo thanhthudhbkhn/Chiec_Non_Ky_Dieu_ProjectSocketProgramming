@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-int validate_choice(int *choice, int bot, int top){
+char validate_choice(char *choice, char bot, char top){
 	if ((*choice < bot)||(*choice > top)) {
 		printf("Your choice is not valid. Enter exactly your choice again:\n");
-		scanf("%d",choice);
+		scanf("%c",choice);
 	}
 	return *choice;
 }
