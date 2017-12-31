@@ -7,6 +7,7 @@
 #include "main.h"
 #include "print.h"
 #include "validate.h"
+#define AUTHENTICATED 1
 
 struct Session{
     struct User user;
@@ -55,6 +56,7 @@ wheel_prog_1(char *host)
 	server_message  *result_12;
 	client_message  function3_1_arg;
   int choice;
+  struct Session session;
 
 #ifndef	DEBUG
 	clnt = clnt_create (host, WHEEL_PROG, V1, "tcp");
@@ -76,25 +78,44 @@ wheel_prog_1(char *host)
   		  scanf("%s", register_1_arg.current_user.name);
   		  printf("Enter the password: ");
   		  scanf("%s", register_1_arg.current_user.pass);
-        register_1_arg.current_user.accStatus = 1;
+
         result_1 = register_1(&register_1_arg, clnt);
         if (result_1 == (server_message *) NULL) {
           clnt_perror (clnt, "call failed"); break;
         }
-        if (result_1->opcode == 0) printf("Register successful!\n");
+        if (result_1->opcode == 0) {
+          printf("Register successful!\n");
+          session.user = register_1_arg.current_user;
+          session.sessStatus = AUTHENTICATED;
+        }
         else if (result_1->opcode == 1){
-          printf("Your username is existed.\n");
+          printf("Your username is existed. Please register with another name.\n");
         }
       } while (result_1->opcode == 1);
       break;
     case 2:
+      strcpy(login_1_arg.command,"LOGIN");
+      do {
+        printf("Enter the username: ");
+        scanf("%s", login_1_arg.current_user.name);
+        printf("Enter the password: ");
+        scanf("%s", login_1_arg.current_user.pass);
+
+        result_2 = login_1(&login_1_arg, clnt);
+        printf("login: %d.\n",result_2->opcode );
+
+        if (result_2 == (server_message *) NULL) {
+          clnt_perror (clnt, "call failed"); break;
+        }
+        if (result_2->opcode == 10) printf("Login successful!\n");
+        else if (result_2->opcode == 11){
+          printf("Your username and password not match.\n");
+        }
+      } while (result_2->opcode == 11);
+      break;
     default: break;
   }
 
-	result_2 = login_1(&login_1_arg, clnt);
-	if (result_2 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
 	result_3 = logout_1(&logout_1_arg, clnt);
 	if (result_3 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
@@ -104,15 +125,15 @@ wheel_prog_1(char *host)
 		clnt_perror (clnt, "call failed");
 	}
 
-	printf("Press Enter to spin ");
-  scanf("%d",&choice);
-	if (1) {
-		strcpy(spin_1_arg.command,"SPIN");
-		result_5 = spin_1(&spin_1_arg, clnt);
-		if (result_5 == (server_message *) NULL) {
-			clnt_perror (clnt, "call failed");
-		} else print_spin_result(result_5->opcode);
-	}
+	// printf("Press Enter to spin ");
+  // scanf("%d",&choice);
+	// if (1) {
+	// 	strcpy(spin_1_arg.command,"SPIN");
+	// 	result_5 = spin_1(&spin_1_arg, clnt);
+	// 	if (result_5 == (server_message *) NULL) {
+	// 		clnt_perror (clnt, "call failed");
+	// 	} else print_spin_result(result_5->opcode);
+	// }
 
 	result_6 = open_1(&open_1_arg, clnt);
 	if (result_6 == (server_message *) NULL) {

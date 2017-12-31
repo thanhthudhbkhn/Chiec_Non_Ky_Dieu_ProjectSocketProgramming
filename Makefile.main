@@ -8,8 +8,8 @@ SERVER = main_server
 
 SOURCES_CLNT.c = print.c validate.c
 SOURCES_CLNT.h = print.h validate.h
-SOURCES_SVC.c = 
-SOURCES_SVC.h =
+SOURCES_SVC.c = validate.c
+SOURCES_SVC.h = validate.h
 SOURCES.x = main.x
 
 TARGETS_SVC.c = main_svc.c main_server.c main_xdr.c

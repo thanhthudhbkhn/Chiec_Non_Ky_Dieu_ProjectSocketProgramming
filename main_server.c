@@ -5,7 +5,7 @@
  */
 
 #include "main.h"
-#include <stdbool.h>
+#include "validate.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -21,30 +21,6 @@ void addUser(client_message *argp) {
        fputs(data,fp);
        fclose(fp);
    }
-}
-
-bool isRegisteredUsername(client_message *argp) {
-    FILE *fp;
-    char* delimiter = "####";
-    char* tokens;
-    char temp[517];
-    int read;
-    fp = fopen("./user.db","r");
-    if(fp == NULL){
-	return FALSE;
-    }
-    while(fgets(temp, 517, fp) != NULL) {
-	tokens = strtok(temp, delimiter );
-	if (tokens != NULL)
-	{
-		if((strcmp(tokens, argp->current_user.name)) == 0) {
-		    fclose(fp);
-		    return TRUE;
-		}
-	}
-    }
-    fclose(fp);
-    return FALSE;
 }
 
 server_message *
@@ -64,12 +40,10 @@ server_message *
 login_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
-	return &result;
+  if(isValidUser(argp)) {
+    result.opcode = 10;
+  } else result.opcode = 11;
+  return &result;
 }
 
 server_message *
