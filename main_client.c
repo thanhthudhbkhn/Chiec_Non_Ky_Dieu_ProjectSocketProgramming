@@ -71,19 +71,21 @@ wheel_prog_1(char *host)
   switch (choice) {
     case 1:
       strcpy(register_1_arg.command,"REGISTER");
-      printf("Enter the username: ");
-		  scanf("%s", register_1_arg.current_user.name);
-		  printf("Enter the password: ");
-		  scanf("%s", register_1_arg.current_user.pass);
-      register_1_arg.current_user.accStatus = 1;
-      result_1 = register_1(&register_1_arg, clnt);
-      if (result_1 == (server_message *) NULL) {
-        clnt_perror (clnt, "call failed");
-      }
-      if (result_1->opcode == 0) printf("Register successful!\n");
-      else if (result_1->opcode == 1) {
-        printf("Your username is existed.\n");
-      }
+      do {
+        printf("Enter the username: ");
+  		  scanf("%s", register_1_arg.current_user.name);
+  		  printf("Enter the password: ");
+  		  scanf("%s", register_1_arg.current_user.pass);
+        register_1_arg.current_user.accStatus = 1;
+        result_1 = register_1(&register_1_arg, clnt);
+        if (result_1 == (server_message *) NULL) {
+          clnt_perror (clnt, "call failed"); break;
+        }
+        if (result_1->opcode == 0) printf("Register successful!\n");
+        else if (result_1->opcode == 1){
+          printf("Your username is existed.\n");
+        }
+      } while (result_1->opcode == 1);
       break;
     case 2:
     default: break;
