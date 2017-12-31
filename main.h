@@ -14,9 +14,17 @@ extern "C" {
 #endif
 
 
+struct User {
+	char name[30];
+	char pass[30];
+	int accStatus;
+};
+typedef struct User User;
+
 struct client_message {
 	char command[100];
 	char parameter[100];
+	User current_user;
 };
 typedef struct client_message client_message;
 
@@ -110,10 +118,12 @@ extern int wheel_prog_1_freeresult ();
 /* the xdr functions */
 
 #if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_User (XDR *, User*);
 extern  bool_t xdr_client_message (XDR *, client_message*);
 extern  bool_t xdr_server_message (XDR *, server_message*);
 
 #else /* K&R C */
+extern bool_t xdr_User ();
 extern bool_t xdr_client_message ();
 extern bool_t xdr_server_message ();
 

@@ -5,16 +5,58 @@
  */
 
 #include "main.h"
+#include <stdbool.h>
+#include <stdlib.h>
+#include <string.h>
+
+void addUser(client_message *argp) {
+   char* delimiter = "####";
+   FILE *fp = fopen("./user.db","a+");
+   if(fp != NULL) {
+       char data[517]  = "";
+       strcpy(data,argp->current_user.name);
+       strcat(data,delimiter);
+       strcat(data,argp->current_user.pass);
+       strcat(data,"\n");
+       fputs(data,fp);
+       fclose(fp);
+   }
+}
+
+bool isRegisteredUsername(client_message *argp) {
+    FILE *fp;
+    char* delimiter = "####";
+    char* tokens;
+    char temp[517];
+    int read;
+    fp = fopen("./user.db","r");
+    if(fp == NULL){
+	return FALSE;
+    }
+    while(fgets(temp, 517, fp) != NULL) {
+	tokens = strtok(temp, delimiter );
+	if (tokens != NULL)
+	{
+		if((strcmp(tokens, argp->current_user.name)) == 0) {
+		    fclose(fp);
+		    return TRUE;
+		}
+	}
+    }
+    fclose(fp);
+    return FALSE;
+}
 
 server_message *
 register_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
+	if(!isRegisteredUsername(argp))
+	{
+		addUser(argp);
+		result.opcode = 00;
+	} else result.opcode = 01;
+	// printf("%s\n",argp->current_user.name );
 	return &result;
 }
 

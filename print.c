@@ -20,3 +20,13 @@ void print_spin_result(int spin_code){
 		default: break;
 	}
 }
+
+void welcome(){
+	printf("Network Programming Project - Jan 2018\nWHEEL OF FORTUNE\n");
+	printf("Phan Thanh Thu - 20144424\nPhung Van Khanh - 20142319\n");
+	printf("----------------------------------------------------\n");
+}
+
+void menu_login() {
+	printf("1.Register\n2.Login\nEnter exactly your choice: ");
+}

@@ -6,19 +6,13 @@
 
 #include "main.h"
 #include "print.h"
+#include "validate.h"
 
-struct User{
-    char name[30];
-    char pass[30];
-    int accStatus; //0 : blocked, 1: active, 2: playing
-};
-struct User users[100];
 struct Session{
     struct User user;
     int sessStatus;// NOT IDENTIFIED USER, NOT AUTHENTICATED…
     struct sockaddr_in cliaddr;
 };
-struct Session sess[100];
 struct Joiner{
     struct User user;
     int score;
@@ -31,7 +25,6 @@ struct Game{
     char question[100]; ///
     char answerAtMoment[100]; // “****ac***c”
 };
-
 
 void
 wheel_prog_1(char *host)
@@ -61,19 +54,41 @@ wheel_prog_1(char *host)
 	client_message  function2_1_arg;
 	server_message  *result_12;
 	client_message  function3_1_arg;
+  int choice;
 
 #ifndef	DEBUG
-	clnt = clnt_create (host, WHEEL_PROG, V1, "udp");
+	clnt = clnt_create (host, WHEEL_PROG, V1, "tcp");
 	if (clnt == NULL) {
 		clnt_pcreateerror (host);
 		exit (1);
 	}
 #endif	/* DEBUG */
 
-	result_1 = register_1(&register_1_arg, clnt);
-	if (result_1 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
+  welcome();
+  menu_login();
+  scanf("%d%*c",&choice);
+  choice = validate_choice(&choice,1,2);
+  switch (choice) {
+    case 1:
+      strcpy(register_1_arg.command,"REGISTER");
+      printf("Enter the username: ");
+		  scanf("%s", register_1_arg.current_user.name);
+		  printf("Enter the password: ");
+		  scanf("%s", register_1_arg.current_user.pass);
+      register_1_arg.current_user.accStatus = 1;
+      result_1 = register_1(&register_1_arg, clnt);
+      if (result_1 == (server_message *) NULL) {
+        clnt_perror (clnt, "call failed");
+      }
+      if (result_1->opcode == 0) printf("Register successful!\n");
+      else if (result_1->opcode == 1) {
+        printf("Your username is existed.\n");
+      }
+      break;
+    case 2:
+    default: break;
+  }
+
 	result_2 = login_1(&login_1_arg, clnt);
 	if (result_2 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
@@ -87,10 +102,9 @@ wheel_prog_1(char *host)
 		clnt_perror (clnt, "call failed");
 	}
 
-	char choice;
 	printf("Press Enter to spin ");
-	scanf("%c",&choice);
-	if (choice=='\n') {
+  scanf("%d",&choice);
+	if (1) {
 		strcpy(spin_1_arg.command,"SPIN");
 		result_5 = spin_1(&spin_1_arg, clnt);
 		if (result_5 == (server_message *) NULL) {

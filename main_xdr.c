@@ -6,6 +6,23 @@
 #include "main.h"
 
 bool_t
+xdr_User (XDR *xdrs, User *objp)
+{
+	register int32_t *buf;
+
+	int i;
+	 if (!xdr_vector (xdrs, (char *)objp->name, 30,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	 if (!xdr_vector (xdrs, (char *)objp->pass, 30,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->accStatus))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_client_message (XDR *xdrs, client_message *objp)
 {
 	register int32_t *buf;
@@ -16,6 +33,8 @@ xdr_client_message (XDR *xdrs, client_message *objp)
 		 return FALSE;
 	 if (!xdr_vector (xdrs, (char *)objp->parameter, 100,
 		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	 if (!xdr_User (xdrs, &objp->current_user))
 		 return FALSE;
 	return TRUE;
 }
