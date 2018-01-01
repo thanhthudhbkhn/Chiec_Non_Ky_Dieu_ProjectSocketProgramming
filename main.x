@@ -11,8 +11,22 @@ struct client_message {
 	User current_user;
 };
 
+struct Joiner{
+    struct User user;
+    int score;
+    int in_game;
+};
+
+struct game{
+    int status; /*0: game kết thúc, 1: còn game*/
+    struct Joiner joiners[3];
+    char question[100];
+    char answerAtMoment[100];
+};
+
 struct server_message {
 	int opcode;
+  game current_game;
 };
 
 program WHEEL_PROG {

@@ -7,24 +7,13 @@
 #include "main.h"
 #include "print.h"
 #include "validate.h"
+#define NOT_AUTHENTICATED 0
 #define AUTHENTICATED 1
 
 struct Session{
     struct User user;
     int sessStatus;// NOT IDENTIFIED USER, NOT AUTHENTICATED…
     struct sockaddr_in cliaddr;
-};
-struct Joiner{
-    struct User user;
-    int score;
-    int in_game; // Check User still play in game ?
-    char messageAction[200];
-};
-struct Game{
-    int status; //0: game kết thúc, 1: còn game
-    struct Joiner joiners[3];
-    char question[100]; ///
-    char answerAtMoment[100]; // “****ac***c”
 };
 
 void
@@ -119,24 +108,36 @@ wheel_prog_1(char *host)
       break;
     default: break;
   }
+
   if (session.sessStatus == AUTHENTICATED) {
-    printf("Press Enter to spin ");
-    scanf("%c",&choice);
-  	if (choice == '\n') {
-  		strcpy(spin_1_arg.command,"SPIN");
-  		result_5 = spin_1(&spin_1_arg, clnt);
-  		if (result_5 == (server_message *) NULL) {
-  			clnt_perror (clnt, "call failed");
-  		} else print_spin_result(result_5->opcode);
-  	}
+    menu_joingame();
+    scanf("%c%*c",&choice);
+    choice = validate_choice(&choice,'1','2');
+    switch (choice) {
+      case '1'://join
+        result_4 = join_1(&join_1_arg, clnt);
+        if (result_4 == (server_message *) NULL) {
+          clnt_perror (clnt, "call failed");
+        } else printf("welcom to the game\n");
+        menu_spin();
+        scanf("%c%*c",&choice);
+        if (choice == '1') {
+          strcpy(spin_1_arg.command,"SPIN");
+          result_5 = spin_1(&spin_1_arg, clnt);
+          if (result_5 == (server_message *) NULL) {
+            clnt_perror (clnt, "call failed");
+          } else print_spin_result(result_5->opcode);
+        }
+        break;
+      case '2'://logout
+        session.sessStatus = NOT_AUTHENTICATED;
+        break;
+      default: break;
+    }
   } else printf("You have not login.\n");
 
 	result_3 = logout_1(&logout_1_arg, clnt);
 	if (result_3 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_4 = join_1(&join_1_arg, clnt);
-	if (result_4 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
 

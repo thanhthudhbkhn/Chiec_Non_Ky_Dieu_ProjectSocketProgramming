@@ -40,11 +40,47 @@ xdr_client_message (XDR *xdrs, client_message *objp)
 }
 
 bool_t
+xdr_Joiner (XDR *xdrs, Joiner *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_User (xdrs, &objp->user))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->score))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->in_game))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_game (XDR *xdrs, game *objp)
+{
+	register int32_t *buf;
+
+	int i;
+	 if (!xdr_int (xdrs, &objp->status))
+		 return FALSE;
+	 if (!xdr_vector (xdrs, (char *)objp->joiners, 3,
+		sizeof (Joiner), (xdrproc_t) xdr_Joiner))
+		 return FALSE;
+	 if (!xdr_vector (xdrs, (char *)objp->question, 100,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	 if (!xdr_vector (xdrs, (char *)objp->answerAtMoment, 100,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_server_message (XDR *xdrs, server_message *objp)
 {
 	register int32_t *buf;
 
 	 if (!xdr_int (xdrs, &objp->opcode))
+		 return FALSE;
+	 if (!xdr_game (xdrs, &objp->current_game))
 		 return FALSE;
 	return TRUE;
 }

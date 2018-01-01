@@ -30,3 +30,11 @@ void welcome(){
 void menu_login() {
 	printf("1.Register\n2.Login\nEnter exactly your choice: ");
 }
+
+void menu_joingame() {
+	printf("1.Join game\n2.Logout\nEnter exactly your choice: ");
+}
+
+void menu_spin() {
+	printf("1.Spin\n2.Quit the game\nEnter exactly your choice: ");
+}

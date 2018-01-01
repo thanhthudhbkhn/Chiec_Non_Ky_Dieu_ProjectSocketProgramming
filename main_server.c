@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+struct game current_game;
+
 void addUser(client_message *argp) {
    char* delimiter = "####";
    FILE *fp = fopen("./user.db","a+");
@@ -61,7 +63,7 @@ logout_1_svc(client_message *argp, struct svc_req *rqstp)
 server_message *
 join_1_svc(client_message *argp, struct svc_req *rqstp)
 {
-	static server_message  result;
+	static server_message result;
 
 	/*
 	 * insert server code here
