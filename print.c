@@ -38,7 +38,9 @@ void menu_login() {
 	printf("----------------------------------------------------------------------\n" );
 	printf("1.Register\n2.Login\nEnter exactly your choice: ");
 }
-
+void print_logout() {
+	printf("Good bye.\n\n\n\n");
+}
 void menu_joingame() {
 	printf("----------------------------------------------------------------------\n" );
 	printf("1.Join game\n2.Logout\nEnter exactly your choice: ");

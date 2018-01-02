@@ -136,10 +136,14 @@ wheel_prog_1(char *host)
         break;
       case '2'://logout
         session.sessStatus = NOT_AUTHENTICATED;
+        strcpy(session.user.name, "");
+        strcpy(session.user.pass, "");
+        print_logout();
+        wheel_prog_1 (host);
         break;
       default: break;
     }
-  } else printf("You have not login.\n");
+  }
 
 	result_3 = logout_1(&logout_1_arg, clnt);
 	if (result_3 == (server_message *) NULL) {
