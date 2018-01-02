@@ -193,8 +193,11 @@ wheel_prog_1(char *host)
         result_4 = join_1(&join_1_arg, clnt);
         if (result_4 == (server_message *) NULL) {
           clnt_perror (clnt, "call failed");
-        } else print_quiz(result_4);
-        play_game(clnt);
+        } else {
+          print_quiz(result_4);
+          // current_game = result_4->current_game;
+          play_game(clnt);
+        }
         break;
       case '2'://logout
         session.sessStatus = NOT_AUTHENTICATED;

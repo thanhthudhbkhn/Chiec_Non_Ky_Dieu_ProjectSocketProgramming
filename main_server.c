@@ -58,6 +58,13 @@ struct Quiz get_the_quiz() {
   return quiz;
 }
 
+char * setdefaultAnswer(char* answer) {
+  int i;
+  char *defaultAnswer = answer;
+  for (i=0;i<strlen(answer);i++) defaultAnswer[i] = '*';
+  return defaultAnswer;
+}
+
 server_message *
 register_1_svc(client_message *argp, struct svc_req *rqstp)
 {
@@ -100,7 +107,7 @@ join_1_svc(client_message *argp, struct svc_req *rqstp)
   result.current_game.status = GAME_RUNNING;
   struct Quiz quiz = get_the_quiz();
   result.current_game.quiz = quiz;
-  strcpy(result.current_game.answerAtMoment, "");
+  strcpy(result.current_game.answerAtMoment, setdefaultAnswer(quiz.answer));
   result.current_game.joiners[0].user = argp->current_user;
   result.current_game.joiners[0].score = 0;
   result.current_game.joiners[0].in_game = PLAYING_GAME;
@@ -132,11 +139,31 @@ server_message *
 guess_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
+  int i=0;
+  int done = 1;
+  int spin_code;
+  char *character;
+  char *answer = current_game.quiz.answer;
+  // printf("%s\n",argp->parameter );
+  // printf("%s\n",current_game.quiz.answer );
+  // printf("%s\n",current_game.answerAtMoment );
 
-	/*
-	 * insert server code here
-	 */
-
+  spin_code = atoi(strtok(argp->parameter, DELIMITER));
+  character = strtok(NULL,DELIMITER);
+  for(i=0;i<strlen(current_game.answerAtMoment);i++) {
+    if (current_game.answerAtMoment[i]=='*'){
+      done = 0;
+      if (answer[i] == character[0]) {
+        current_game.answerAtMoment[i] = character[0];
+        result.opcode = 70;
+      }
+    }
+  }
+  if (done == 1) printf("congrate\n" );
+  if (result.opcode == 70) {//correct
+    strcpy(result.current_game.answerAtMoment, current_game.answerAtMoment);
+  }  else result.opcode = 71;
+  printf("answerAtMoment:%s.\n",current_game.answerAtMoment );
 	return &result;
 }
 
