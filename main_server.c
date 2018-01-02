@@ -17,7 +17,7 @@
 struct game current_game;
 
 void addUser(client_message *argp) {
-   FILE *fp = fopen("./user.db","a+");
+   FILE *fp = fopen("./database/user.db","a+");
    if(fp != NULL) {
        char data[517]  = "";
        strcpy(data,argp->current_user.name);
@@ -36,7 +36,7 @@ struct Quiz get_the_quiz() {
   char temp[100];
   char *tokens;
   char line[100];
-  FILE *fp = fopen("./quiz.db","r");
+  FILE *fp = fopen("./database/quiz.db","r");
   if(fp!=NULL) {
     if (fgets(temp, 100, fp)!=NULL) {
       strcpy(line,temp);

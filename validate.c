@@ -18,7 +18,7 @@ bool isRegisteredUsername(client_message *argp) {
     char* tokens;
     char temp[517];
     int read;
-    fp = fopen("./user.db","r");
+    fp = fopen("./database/user.db","r");
     if(fp == NULL){
 	return FALSE;
     }
@@ -41,7 +41,7 @@ bool isValidUser(client_message *argp) {
     char* tokens;
     char temp[517];
     char input[517];
-    fp = fopen("./user.db","r");
+    fp = fopen("./database/user.db","r");
     if(fp == NULL){
 	return FALSE;
     }

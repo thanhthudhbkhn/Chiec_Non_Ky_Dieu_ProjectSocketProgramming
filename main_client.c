@@ -58,7 +58,7 @@ wheel_prog_1(char *host)
   print_project_info();
   menu_login();
   /* register or login*/
-  scanf("%c%*s",&choice);
+  scanf("%c%*c",&choice);
   choice = validate_choice(&choice,'1','2');
   switch (choice) {
     case '1':
@@ -113,7 +113,7 @@ wheel_prog_1(char *host)
   if (session.sessStatus == AUTHENTICATED) {
     menu_joingame();
     /*join game or logout*/
-    scanf("%c%*s",&choice);
+    scanf("%c%*c",&choice);
     choice = validate_choice(&choice,'1','2');
     switch (choice) {
       case '1'://join
