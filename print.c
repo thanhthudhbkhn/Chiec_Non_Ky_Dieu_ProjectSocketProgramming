@@ -26,30 +26,34 @@ void print_spin_result(int spin_code){
 void print_project_info() {
 	printf("Network Programming Project - Jan 2018\nWHEEL OF FORTUNE\n");
 	printf("Phan Thanh Thu - 20144424\nPhung Van Khanh - 20142319\n");
-	printf("----------------------------------------------------\n");
+	printf("----------------------------------------------------------------------\n" );
 }
 
 void print_welcome(){
-	printf("\nWELCOME TO THE GAME.\n");
+	printf("----------------------------------------------------------------------\n" );
+	printf("WELCOME TO THE GAME.\n");
 }
 
 void menu_login() {
+	printf("----------------------------------------------------------------------\n" );
 	printf("1.Register\n2.Login\nEnter exactly your choice: ");
 }
 
 void menu_joingame() {
+	printf("----------------------------------------------------------------------\n" );
 	printf("1.Join game\n2.Logout\nEnter exactly your choice: ");
 }
 
 void menu_spin() {
+	printf("----------------------------------------------------------------------\n" );
 	printf("1.Spin\n2.Guess all the quiz\n3.Quit the game\nEnter exactly your choice: ");
 }
 void print_quiz(server_message *message){
 	printf("----------------------------------------------------------------------\n" );
-	printf("\nToday quiz:\n    %s\n",message->current_game.quiz.question );
+	printf("Today quiz:\n    %s\n",message->current_game.quiz.question );
 	char *answer = message->current_game.quiz.answer;
 	int length = (int)strlen(answer);
-	printf("The answer has %d character(s):\n", length);
+	printf("The answer has %d character(s):\n    ", length);
 	for(int i=0;i<length;i++) {
 		if(answer[i]!=' ') printf("*");
 		else printf(" ");
