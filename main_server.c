@@ -100,17 +100,18 @@ join_1_svc(client_message *argp, struct svc_req *rqstp)
   result.current_game.status = GAME_RUNNING;
   struct Quiz quiz = get_the_quiz();
   result.current_game.quiz = quiz;
-  strcpy(result.current_game.answerAtMoment, "hoathi");
+  strcpy(result.current_game.answerAtMoment, "");
   result.current_game.joiners[0].user = argp->current_user;
   result.current_game.joiners[0].score = 0;
   result.current_game.joiners[0].in_game = PLAYING_GAME;
+  current_game = result.current_game;
 	return &result;
 }
 
 server_message *
 spin_1_svc(client_message *argp, struct svc_req *rqstp)
 {
-  static server_message  result;
+  static server_message result;
 	result.opcode = rand()%15;
 	return &result;
 }

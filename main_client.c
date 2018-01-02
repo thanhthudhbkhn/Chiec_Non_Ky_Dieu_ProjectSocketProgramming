@@ -3,7 +3,8 @@
  * These are only templates and you can use them
  * as a guideline for developing your own functions.
  */
-
+#include <stdio.h>
+#include <string.h>
 #include "main.h"
 #include "print.h"
 #include "validate.h"
@@ -15,6 +16,31 @@ struct Session{
     int sessStatus;// AUTHENTICATED, NOT AUTHENTICATED…
     struct sockaddr_in cliaddr;
 };
+
+void guess(int opcode, CLIENT *clnt) {
+	client_message  guess_1_arg;
+	server_message  *result_7;
+  char character;
+  char tmp[4];
+
+  printf("I think the answer contains this character (please enter only a character from 'a' to 'z'): ");
+  scanf("%c%*c",&character);
+
+  strcpy(guess_1_arg.command,"GUESS");
+  sprintf(tmp, "%d", opcode);
+  strcpy(guess_1_arg.parameter,tmp);
+  strcat(guess_1_arg.parameter,"####");
+  tmp[0] = character;tmp[1]='\0';
+  strcat(guess_1_arg.parameter,tmp);
+  result_7 = guess_1(&guess_1_arg, clnt);
+	if (result_7 == (server_message *) NULL) {
+		clnt_perror (clnt, "call failed");
+	} else {
+    if (result_7->opcode == 70) printf("Good job\n" );
+    else if (result_7->opcode == 71) printf("so sad\n");
+  }
+
+}
 
 void play_game(CLIENT *clnt) {
 	server_message  *result_5;
@@ -31,7 +57,27 @@ void play_game(CLIENT *clnt) {
         result_5 = spin_1(&spin_1_arg, clnt);
         if (result_5 == (server_message *) NULL) {
           clnt_perror (clnt, "call failed");
-        } else print_spin_result(result_5->opcode);
+        } else {
+          print_spin_result(result_5->opcode);
+          switch (result_5->opcode) {
+            case 0: guess(0,clnt); break;
+        		case 1: guess(1,clnt); break;
+        		case 2: guess(2,clnt); break;
+        		case 3: guess(3,clnt); break;
+        		case 4: guess(4,clnt); break;
+        		case 5: guess(5,clnt); break;
+        		case 6: guess(6,clnt); break;
+        		case 7: guess(7,clnt); break;
+        		case 8: guess(8,clnt); break;
+        		case 9: guess(9,clnt); break;
+        		case 10: guess(10,clnt); break;
+        		case 11: guess(11,clnt); break;
+        		case 12: guess(12,clnt); break;
+        		case 13: guess(13,clnt); break;
+        		case 14: guess(14,clnt); break;
+        		default: break;
+          }
+        }
         break;
       case '2': break;
       case '3': break;
@@ -70,6 +116,7 @@ wheel_prog_1(char *host)
 	client_message  function3_1_arg;
   char choice;
   struct Session session;
+  struct game current_game;
 
 #ifndef	DEBUG
 	clnt = clnt_create (host, WHEEL_PROG, V1, "tcp");
@@ -123,7 +170,7 @@ wheel_prog_1(char *host)
         }
         if (result_2->opcode == 10) {
             printf("Login successful!\n");
-            session.user = register_1_arg.current_user;
+            session.user = login_1_arg.current_user;
             session.sessStatus = AUTHENTICATED;
         }
         else if (result_2->opcode == 11){
@@ -169,11 +216,8 @@ wheel_prog_1(char *host)
 	if (result_6 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
-	result_7 = guess_1(&guess_1_arg, clnt);
-	if (result_7 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_8 = guess_all_1(&guess_all_1_arg, clnt);
+
+  result_8 = guess_all_1(&guess_all_1_arg, clnt);
 	if (result_8 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
