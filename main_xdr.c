@@ -54,6 +54,21 @@ xdr_Joiner (XDR *xdrs, Joiner *objp)
 }
 
 bool_t
+xdr_Quiz (XDR *xdrs, Quiz *objp)
+{
+	register int32_t *buf;
+
+	int i;
+	 if (!xdr_vector (xdrs, (char *)objp->question, 100,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	 if (!xdr_vector (xdrs, (char *)objp->answer, 100,
+		sizeof (char), (xdrproc_t) xdr_char))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_game (XDR *xdrs, game *objp)
 {
 	register int32_t *buf;
@@ -64,8 +79,7 @@ xdr_game (XDR *xdrs, game *objp)
 	 if (!xdr_vector (xdrs, (char *)objp->joiners, 3,
 		sizeof (Joiner), (xdrproc_t) xdr_Joiner))
 		 return FALSE;
-	 if (!xdr_vector (xdrs, (char *)objp->question, 100,
-		sizeof (char), (xdrproc_t) xdr_char))
+	 if (!xdr_Quiz (xdrs, &objp->quiz))
 		 return FALSE;
 	 if (!xdr_vector (xdrs, (char *)objp->answerAtMoment, 100,
 		sizeof (char), (xdrproc_t) xdr_char))

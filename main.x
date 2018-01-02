@@ -17,10 +17,15 @@ struct Joiner{
     int in_game;
 };
 
+struct Quiz{
+  char question[100];
+  char answer[100];
+};
+
 struct game{
     int status; /*0: game kết thúc, 1: còn game*/
     struct Joiner joiners[3];
-    char question[100];
+    struct Quiz quiz;
     char answerAtMoment[100];
 };
 

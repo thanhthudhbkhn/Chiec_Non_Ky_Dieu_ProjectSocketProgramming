@@ -35,10 +35,16 @@ struct Joiner {
 };
 typedef struct Joiner Joiner;
 
+struct Quiz {
+	char question[100];
+	char answer[100];
+};
+typedef struct Quiz Quiz;
+
 struct game {
 	int status;
 	struct Joiner joiners[3];
-	char question[100];
+	struct Quiz quiz;
 	char answerAtMoment[100];
 };
 typedef struct game game;
@@ -137,6 +143,7 @@ extern int wheel_prog_1_freeresult ();
 extern  bool_t xdr_User (XDR *, User*);
 extern  bool_t xdr_client_message (XDR *, client_message*);
 extern  bool_t xdr_Joiner (XDR *, Joiner*);
+extern  bool_t xdr_Quiz (XDR *, Quiz*);
 extern  bool_t xdr_game (XDR *, game*);
 extern  bool_t xdr_server_message (XDR *, server_message*);
 
@@ -144,6 +151,7 @@ extern  bool_t xdr_server_message (XDR *, server_message*);
 extern bool_t xdr_User ();
 extern bool_t xdr_client_message ();
 extern bool_t xdr_Joiner ();
+extern bool_t xdr_Quiz ();
 extern bool_t xdr_game ();
 extern bool_t xdr_server_message ();
 
