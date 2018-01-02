@@ -16,6 +16,30 @@ struct Session{
     struct sockaddr_in cliaddr;
 };
 
+void play_game(CLIENT *clnt) {
+	server_message  *result_5;
+	client_message  spin_1_arg;
+  char choice;
+  do {
+    menu_spin();
+    /*spin, guess all or quit game*/
+    scanf("%c%*c",&choice);
+    choice = validate_choice(&choice,'1','3');
+    switch (choice) {
+      case '1':
+        strcpy(spin_1_arg.command,"SPIN");
+        result_5 = spin_1(&spin_1_arg, clnt);
+        if (result_5 == (server_message *) NULL) {
+          clnt_perror (clnt, "call failed");
+        } else print_spin_result(result_5->opcode);
+        break;
+      case '2': break;
+      case '3': break;
+      default: break;
+    }
+  } while (choice!='3');
+}
+
 void
 wheel_prog_1(char *host)
 {
@@ -123,16 +147,7 @@ wheel_prog_1(char *host)
         if (result_4 == (server_message *) NULL) {
           clnt_perror (clnt, "call failed");
         } else print_quiz(result_4);
-        // menu_spin();
-        // /*spin, guess all or quit game*/
-        // scanf("%c%*c",&choice);
-        // if (choice == '1') {
-        //   strcpy(spin_1_arg.command,"SPIN");
-        //   result_5 = spin_1(&spin_1_arg, clnt);
-        //   if (result_5 == (server_message *) NULL) {
-        //     clnt_perror (clnt, "call failed");
-        //   } else print_spin_result(result_5->opcode);
-        // }
+        play_game(clnt);
         break;
       case '2'://logout
         session.sessStatus = NOT_AUTHENTICATED;

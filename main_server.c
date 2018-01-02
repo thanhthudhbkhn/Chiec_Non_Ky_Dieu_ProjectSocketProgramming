@@ -110,7 +110,7 @@ join_1_svc(client_message *argp, struct svc_req *rqstp)
 server_message *
 spin_1_svc(client_message *argp, struct svc_req *rqstp)
 {
-	static server_message  result;
+  static server_message  result;
 	result.opcode = rand()%15;
 	return &result;
 }
