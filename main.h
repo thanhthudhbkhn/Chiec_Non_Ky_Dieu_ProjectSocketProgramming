@@ -28,8 +28,24 @@ struct client_message {
 };
 typedef struct client_message client_message;
 
+struct Joiner {
+	struct User user;
+	int score;
+	int in_game;
+};
+typedef struct Joiner Joiner;
+
+struct game {
+	int status;
+	struct Joiner joiners[3];
+	char question[100];
+	char answerAtMoment[100];
+};
+typedef struct game game;
+
 struct server_message {
 	int opcode;
+	game current_game;
 };
 typedef struct server_message server_message;
 
@@ -120,11 +136,15 @@ extern int wheel_prog_1_freeresult ();
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_User (XDR *, User*);
 extern  bool_t xdr_client_message (XDR *, client_message*);
+extern  bool_t xdr_Joiner (XDR *, Joiner*);
+extern  bool_t xdr_game (XDR *, game*);
 extern  bool_t xdr_server_message (XDR *, server_message*);
 
 #else /* K&R C */
 extern bool_t xdr_User ();
 extern bool_t xdr_client_message ();
+extern bool_t xdr_Joiner ();
+extern bool_t xdr_game ();
 extern bool_t xdr_server_message ();
 
 #endif /* K&R C */
