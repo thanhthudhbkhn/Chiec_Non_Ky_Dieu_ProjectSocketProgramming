@@ -21,14 +21,13 @@ bool isRegisteredUsername(client_message *argp) {
 	return FALSE;
     }
     while(fgets(temp, 517, fp) != NULL) {
-	tokens = strtok(temp, delimiter );
-	if (tokens != NULL)
-	{
-		if((strcmp(tokens, argp->current_user.name)) == 0) {
-		    fclose(fp);
-		    return TRUE;
-		}
-	}
+			tokens = strtok(temp, delimiter );
+			if (tokens != NULL)	{
+				if((strcmp(tokens, argp->current_user.name)) == 0) {
+				    fclose(fp);
+				    return TRUE;
+				}
+			}
     }
     fclose(fp);
     return FALSE;

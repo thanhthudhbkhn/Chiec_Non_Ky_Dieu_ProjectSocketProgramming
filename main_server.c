@@ -8,21 +8,49 @@
 #include "validate.h"
 #include <stdlib.h>
 #include <string.h>
+#define PLAYING_GAME 0
+#define QUIT_GAME 1
+#define GAME_RUNNING 0
+#define GAME_OVER 1
+#define DELIMITER "####"
 
 struct game current_game;
 
 void addUser(client_message *argp) {
-   char* delimiter = "####";
    FILE *fp = fopen("./user.db","a+");
    if(fp != NULL) {
        char data[517]  = "";
        strcpy(data,argp->current_user.name);
-       strcat(data,delimiter);
+       strcat(data,DELIMITER);
        strcat(data,argp->current_user.pass);
        strcat(data,"\n");
        fputs(data,fp);
        fclose(fp);
    }
+}
+
+struct Quiz get_the_quiz() {
+  struct Quiz quiz;
+  char question[100];
+  char answer[100];
+  char *temp;
+  char *tokens;
+  FILE *fp = fopen("./quiz.db","r");
+  if(fp!=NULL) {
+    if (fgets(temp, 100, fp) != NULL) {
+      tokens = strtok(temp, DELIMITER);
+      if (tokens != NULL) {
+        strcpy(quiz.question, tokens);
+      }
+      tokens = strtok(NULL,DELIMITER);
+      tokens[strlen(tokens)-1] = '\0';
+      if (tokens != NULL) {
+        strcpy(quiz.answer, tokens);
+      }
+    }
+    fclose(fp);
+  }
+  return quiz;
 }
 
 server_message *
@@ -34,7 +62,6 @@ register_1_svc(client_message *argp, struct svc_req *rqstp)
 		addUser(argp);
 		result.opcode = 00;
 	} else result.opcode = 01;
-	// printf("%s\n",argp->current_user.name );
 	return &result;
 }
 
@@ -63,12 +90,15 @@ logout_1_svc(client_message *argp, struct svc_req *rqstp)
 server_message *
 join_1_svc(client_message *argp, struct svc_req *rqstp)
 {
-	static server_message result;
-
-	/*
-	 * insert server code here
-	 */
-
+  static server_message result;
+  result.opcode = 40;
+  result.current_game.status = GAME_RUNNING;
+  struct Quiz quiz = get_the_quiz();
+  result.current_game.quiz = quiz;
+  strcpy(result.current_game.answerAtMoment, "hoathi");
+  result.current_game.joiners[0].user = argp->current_user;
+  result.current_game.joiners[0].score = 0;
+  result.current_game.joiners[0].in_game = PLAYING_GAME;
 	return &result;
 }
 

@@ -12,7 +12,7 @@
 
 struct Session{
     struct User user;
-    int sessStatus;// NOT IDENTIFIED USER, NOT AUTHENTICATED…
+    int sessStatus;// AUTHENTICATED, NOT AUTHENTICATED…
     struct sockaddr_in cliaddr;
 };
 
@@ -55,8 +55,9 @@ wheel_prog_1(char *host)
 	}
 #endif	/* DEBUG */
 
-  welcome();
+  print_project_info();
   menu_login();
+  /* register or login*/
   scanf("%c%*c",&choice);
   choice = validate_choice(&choice,'1','2');
   switch (choice) {
@@ -111,23 +112,27 @@ wheel_prog_1(char *host)
 
   if (session.sessStatus == AUTHENTICATED) {
     menu_joingame();
+    /*join game or logout*/
     scanf("%c%*c",&choice);
     choice = validate_choice(&choice,'1','2');
     switch (choice) {
       case '1'://join
+        print_welcome();
+        strcpy(join_1_arg.command,"JOIN");
         result_4 = join_1(&join_1_arg, clnt);
         if (result_4 == (server_message *) NULL) {
           clnt_perror (clnt, "call failed");
-        } else printf("welcom to the game\n");
-        menu_spin();
-        scanf("%c%*c",&choice);
-        if (choice == '1') {
-          strcpy(spin_1_arg.command,"SPIN");
-          result_5 = spin_1(&spin_1_arg, clnt);
-          if (result_5 == (server_message *) NULL) {
-            clnt_perror (clnt, "call failed");
-          } else print_spin_result(result_5->opcode);
-        }
+        } else print_quiz(result_4);
+        // menu_spin();
+        // /*spin, guess all or quit game*/
+        // scanf("%c%*c",&choice);
+        // if (choice == '1') {
+        //   strcpy(spin_1_arg.command,"SPIN");
+        //   result_5 = spin_1(&spin_1_arg, clnt);
+        //   if (result_5 == (server_message *) NULL) {
+        //     clnt_perror (clnt, "call failed");
+        //   } else print_spin_result(result_5->opcode);
+        // }
         break;
       case '2'://logout
         session.sessStatus = NOT_AUTHENTICATED;

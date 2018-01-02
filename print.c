@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <string.h>
+#include "main.h"
 
 void print_spin_result(int spin_code){
 	switch (spin_code) {
@@ -21,10 +23,14 @@ void print_spin_result(int spin_code){
 	}
 }
 
-void welcome(){
+void print_project_info() {
 	printf("Network Programming Project - Jan 2018\nWHEEL OF FORTUNE\n");
 	printf("Phan Thanh Thu - 20144424\nPhung Van Khanh - 20142319\n");
 	printf("----------------------------------------------------\n");
+}
+
+void print_welcome(){
+	printf("\nWELCOME TO THE GAME.\n");
 }
 
 void menu_login() {
@@ -36,5 +42,19 @@ void menu_joingame() {
 }
 
 void menu_spin() {
-	printf("1.Spin\n2.Quit the game\nEnter exactly your choice: ");
+	printf("1.Spin\n2.Guess all the quiz\n3.Quit the game\nEnter exactly your choice: ");
+}
+void print_quiz(server_message *message){
+	printf("----------------------------------------------------------------------\n" );
+	printf("\nToday quiz:\n    %s\n",message->current_game.quiz.question );
+	char *answer = message->current_game.quiz.answer;
+	int length = (int)strlen(answer);
+	printf("The answer has %d character(s):\n", length);
+	for(int i=0;i<length;i++) {
+		if(answer[i]!=' ') printf("*");
+		else printf(" ");
+	}
+	printf("\n");
+	// printf("%s\n",message->current_game.quiz.answer );
+	// printf("%s\n",message->current_game.answerAtMoment );
 }
