@@ -47,11 +47,12 @@ void menu_spin() {
 void print_quiz(server_message *message){
 	printf("----------------------------------------------------------------------\n" );
 	printf("\nToday quiz:\n    %s\n",message->current_game.quiz.question );
-	// char *answer = message->current_game.quiz.answer
-	int length = (int)strlen(message->current_game.quiz.answer);
+	char *answer = message->current_game.quiz.answer;
+	int length = (int)strlen(answer);
 	printf("The answer has %d character(s):\n", length);
 	for(int i=0;i<length;i++) {
-		printf("*");
+		if(answer[i]!=' ') printf("*");
+		else printf(" ");
 	}
 	printf("\n");
 	// printf("%s\n",message->current_game.quiz.answer );
