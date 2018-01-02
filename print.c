@@ -55,6 +55,4 @@ void print_quiz(server_message *message){
 		else printf(" ");
 	}
 	printf("\n");
-	// printf("%s\n",message->current_game.quiz.answer );
-	// printf("%s\n",message->current_game.answerAtMoment );
 }

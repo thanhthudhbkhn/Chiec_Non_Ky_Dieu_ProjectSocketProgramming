@@ -33,22 +33,27 @@ struct Quiz get_the_quiz() {
   struct Quiz quiz;
   char question[100];
   char answer[100];
-  char *temp;
+  char temp[100];
   char *tokens;
+  char line[100];
   FILE *fp = fopen("./quiz.db","r");
   if(fp!=NULL) {
-    if (fgets(temp, 100, fp) != NULL) {
-      tokens = strtok(temp, DELIMITER);
-      if (tokens != NULL) {
-        strcpy(quiz.question, tokens);
-      }
-      tokens = strtok(NULL,DELIMITER);
-      tokens[strlen(tokens)-1] = '\0';
-      if (tokens != NULL) {
-        strcpy(quiz.answer, tokens);
+    if (fgets(temp, 100, fp)!=NULL) {
+      strcpy(line,temp);
+      while (fgets(temp, 100, fp) != NULL) {
+        if (rand()%2 == 0) strcpy(line,temp);
       }
     }
     fclose(fp);
+  } else printf("open file error\n");
+  tokens = strtok(line, DELIMITER);
+  if (tokens != NULL) {
+    strcpy(quiz.question, tokens);
+  }
+  tokens = strtok(NULL,DELIMITER);
+  tokens[strlen(tokens)-1] = '\0';
+  if (tokens != NULL) {
+    strcpy(quiz.answer, tokens);
   }
   return quiz;
 }
