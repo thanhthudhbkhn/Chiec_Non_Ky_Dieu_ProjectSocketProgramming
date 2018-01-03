@@ -78,6 +78,30 @@ char lower_to_upper(char lower) {
   else return lower;
 }
 
+int get_score(int spin_code, int score){
+  switch (spin_code) {
+		case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+      score+=(spin_code+1)*100;
+      return score;
+		case 10: return score*=2;
+		case 11: return score/=2;
+		case 12: printf("You got the Mat luot\n"); break;
+		case 13: printf("You got the Them luot\n"); break;
+		case 14: printf("You got the May man\n"); break;
+		default: break;
+	}
+  return current_game.joiners[0].score;
+}
+
 server_message *
 register_1_svc(client_message *argp, struct svc_req *rqstp)
 {
@@ -170,6 +194,7 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
       if (answer[i] == character[0]) {
         current_game.answerAtMoment[i] = character[0];
         result.opcode = 70;
+        current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
       }
     }
   }
@@ -180,7 +205,7 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
     }
   }
   if (done == 1) result.opcode = 72;
-  strcpy(result.current_game.answerAtMoment, current_game.answerAtMoment);
+  result.current_game = current_game;
   // printf("answerAtMoment:%s.\n",result.current_game.answerAtMoment );
 	return &result;
 }

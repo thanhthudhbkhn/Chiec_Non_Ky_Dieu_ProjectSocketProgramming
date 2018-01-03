@@ -39,8 +39,16 @@ void guess(int opcode, CLIENT *clnt) {
 	} else {
     if (result_7->opcode == 70) printf("Good job! The answer contains '%c'.\n", character );
     else if (result_7->opcode == 71) printf("Oops! The answer does not contain '%c'.\n", character );
-    else if (result_7->opcode == 72) printf("Congratulation! You have complete the answer!\n");
-    printf(".%s.\n",result_7->current_game.answerAtMoment );
+    else if (result_7->opcode == 72) {
+      printf("Congratulation! You have complete the answer!\n");
+      sleep(2);
+    }
+
+    printf("\nToday quiz:\n    %s\n",result_7->current_game.quiz.question );
+  	int length = (int)strlen(result_7->current_game.quiz.answer);
+  	printf("The answer has %d character(s):\n    ", length);
+    printf("    %s\n",result_7->current_game.answerAtMoment );
+    printf("Your score: %d!\n",result_7->current_game.joiners[0].score );
   }
 
 }
@@ -84,7 +92,9 @@ void play_game(CLIENT *clnt) {
           }
         }
         break;
-      case '2': break;
+      case '2':
+
+        break;
       case '3': break;
       default: break;
     }
@@ -200,7 +210,7 @@ wheel_prog_1(char *host)
           clnt_perror (clnt, "call failed");
         } else {
           print_quiz(result_4);
-          // current_game = result_4->current_game;
+          current_game = result_4->current_game;
           play_game(clnt);
         }
         break;
