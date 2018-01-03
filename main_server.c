@@ -150,6 +150,7 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
 
   spin_code = atoi(strtok(argp->parameter, DELIMITER));
   character = strtok(NULL,DELIMITER);
+  result.opcode = 71;
   for(i=0;i<strlen(current_game.answerAtMoment);i++) {
     if (current_game.answerAtMoment[i]=='*'){
       done = 0;

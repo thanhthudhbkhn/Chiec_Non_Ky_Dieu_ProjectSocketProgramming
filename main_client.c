@@ -36,6 +36,7 @@ void guess(int opcode, CLIENT *clnt) {
 	if (result_7 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	} else {
+    printf("%s\n",result_7->current_game.answerAtMoment );
     if (result_7->opcode == 70) printf("Good job\n" );
     else if (result_7->opcode == 71) printf("so sad\n");
   }
