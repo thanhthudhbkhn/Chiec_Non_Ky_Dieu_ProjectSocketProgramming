@@ -14,11 +14,11 @@ void print_spin_result(int spin_code){
 		case 7: printf("You got 800 scored!\n"); break;
 		case 8: printf("You got 900 scored!\n"); break;
 		case 9: printf("You got 1000 scored!\n"); break;
-		case 10: printf("You got the Double. Your score will be x2.\n"); break;
-		case 11: printf("You got the Divide by 2. Your score will be :2 :( \n"); break;
-		case 12: printf("You got the Mat luot\n"); break;
-		case 13: printf("You got the Them luot\n"); break;
-		case 14: printf("You got the May man\n"); break;
+		case THE_DOUBLE: printf("You got the Double. Your score will be x2.\n"); break;
+		case THE_DIVIDE: printf("You got the Divide by 2. Your score will be :2 :( \n"); break;
+		case LOST_A_TURN: printf("You got the Mat luot\n"); break;
+		case GAIN_A_TURN: printf("You got the Them luot\n"); break;
+		case LUCKY: printf("You got the May man\n"); break;
 		default: break;
 	}
 }

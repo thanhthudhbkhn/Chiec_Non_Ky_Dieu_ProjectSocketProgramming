@@ -8,11 +8,6 @@
 #include "validate.h"
 #include <stdlib.h>
 #include <string.h>
-#define PLAYING_GAME 0
-#define QUIT_GAME 1
-#define GAME_RUNNING 0
-#define GAME_OVER 1
-#define DELIMITER "####"
 
 struct game current_game;
 
@@ -80,7 +75,7 @@ char lower_to_upper(char lower) {
 
 int get_score(int spin_code, int score){
   switch (spin_code) {
-		case 0:
+    case 0:
 		case 1:
 		case 2:
 		case 3:
@@ -92,11 +87,11 @@ int get_score(int spin_code, int score){
 		case 9:
       score+=(spin_code+1)*100;
       return score;
-		case 10: return score*=2;
-		case 11: return score/=2;
-		case 12: printf("You got the Mat luot\n"); break;
-		case 13: printf("You got the Them luot\n"); break;
-		case 14: printf("You got the May man\n"); break;
+		case THE_DOUBLE: return score*=2;
+		case THE_DIVIDE: return score/=2;
+		case LOST_A_TURN: printf("You got the Mat luot\n"); break;
+		case GAIN_A_TURN: printf("You got the Them luot\n"); break;
+		case LUCKY: printf("You got the May man\n"); break;
 		default: break;
 	}
   return current_game.joiners[0].score;
@@ -177,7 +172,7 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
   int i=0;
-  int done = 1;
+  current_game.status = GAME_OVER;
   int spin_code;
   char *character;
   char *answer = current_game.quiz.answer;
@@ -201,10 +196,10 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
   //check if the answer is completed?
   for(i=0;i<strlen(current_game.answerAtMoment);i++) {
     if (current_game.answerAtMoment[i]=='*'){
-      done = 0;
+      current_game.status = GAME_RUNNING;
     }
   }
-  if (done == 1) result.opcode = 72;
+  if (current_game.status == GAME_OVER) result.opcode = 72;
   result.current_game = current_game;
   // printf("answerAtMoment:%s.\n",result.current_game.answerAtMoment );
 	return &result;
@@ -214,11 +209,16 @@ server_message *
 guess_all_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
+  char full_answer[100];
+  int i;
+  for (int i = 0; i < strlen(argp->parameter); i++) {
+    full_answer[i] = lower_to_upper(argp->parameter[i]);
+  }
+  if (strcmp(full_answer,current_game.quiz.answer) == 0) {
+    result.opcode = COMPLETED;
+    current_game.status = GAME_OVER;
+  } else current_game.status = GAME_RUNNING;
+  result.current_game = current_game;
 	return &result;
 }
 

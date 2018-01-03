@@ -9,8 +9,6 @@
 #include "main.h"
 #include "print.h"
 #include "validate.h"
-#define NOT_AUTHENTICATED 0
-#define AUTHENTICATED 1
 
 struct Session{
     struct User user;
@@ -18,7 +16,7 @@ struct Session{
     struct sockaddr_in cliaddr;
 };
 
-void guess(int opcode, CLIENT *clnt) {
+int guess(int opcode, CLIENT *clnt) {
 	client_message  guess_1_arg;
 	server_message  *result_7;
   char character;
@@ -37,10 +35,10 @@ void guess(int opcode, CLIENT *clnt) {
 	if (result_7 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	} else {
-    if (result_7->opcode == 70) printf("Good job! The answer contains '%c'.\n", character );
-    else if (result_7->opcode == 71) printf("Oops! The answer does not contain '%c'.\n", character );
-    else if (result_7->opcode == 72) {
-      printf("Congratulation! You have complete the answer!\n");
+    if (result_7->opcode == CORRECT) printf("Good job! The answer contains '%c'.\n", character );
+    else if (result_7->opcode == INCORRECT) printf("Oops! The answer does not contain '%c'.\n", character );
+    else if (result_7->opcode == COMPLETED) {
+      printf("Congratulation! You have completed the quiz!\n");
       sleep(2);
     }
 
@@ -50,12 +48,16 @@ void guess(int opcode, CLIENT *clnt) {
     printf("    %s\n",result_7->current_game.answerAtMoment );
     printf("Your score: %d!\n",result_7->current_game.joiners[0].score );
   }
-
+  return result_7->current_game.status;
 }
 
 void play_game(CLIENT *clnt) {
 	server_message  *result_5;
 	client_message  spin_1_arg;
+	server_message  *result_8;
+	client_message  guess_all_1_arg;
+  int game_status = GAME_RUNNING;
+  char full_answer[100];
   char choice;
   do {
     menu_spin();
@@ -73,32 +75,53 @@ void play_game(CLIENT *clnt) {
           system("clear");
           print_spin_result(result_5->opcode);
           switch (result_5->opcode) {
-            case 0: guess(0,clnt); break;
-        		case 1: guess(1,clnt); break;
-        		case 2: guess(2,clnt); break;
-        		case 3: guess(3,clnt); break;
-        		case 4: guess(4,clnt); break;
-        		case 5: guess(5,clnt); break;
-        		case 6: guess(6,clnt); break;
-        		case 7: guess(7,clnt); break;
-        		case 8: guess(8,clnt); break;
-        		case 9: guess(9,clnt); break;
-        		case 10: guess(10,clnt); break;
-        		case 11: guess(11,clnt); break;
-        		case 12: guess(12,clnt); break;
-        		case 13: guess(13,clnt); break;
-        		case 14: guess(14,clnt); break;
+            case 0: game_status = guess(0,clnt); break;
+        		case 1: game_status = guess(1,clnt); break;
+        		case 2: game_status = guess(2,clnt); break;
+        		case 3: game_status = guess(3,clnt); break;
+        		case 4: game_status = guess(4,clnt); break;
+        		case 5: game_status = guess(5,clnt); break;
+        		case 6: game_status = guess(6,clnt); break;
+        		case 7: game_status = guess(7,clnt); break;
+        		case 8: game_status = guess(8,clnt); break;
+        		case 9: game_status = guess(9,clnt); break;
+        		case THE_DOUBLE: game_status = guess(THE_DOUBLE,clnt); break;
+        		case THE_DIVIDE: game_status = guess(THE_DIVIDE,clnt); break;
+        		case LOST_A_TURN: game_status = guess(LOST_A_TURN,clnt); break;
+        		case GAIN_A_TURN: game_status = guess(GAIN_A_TURN,clnt); break;
+        		case LUCKY: game_status = guess(LUCKY,clnt); break;
         		default: break;
           }
         }
         break;
       case '2':
+        printf("Enter the full answer: ");
+        fgets(full_answer, 100, stdin);
+        int c;
+        // while ((c=getchar()) != '\n' && c != EOF);
+        full_answer[strlen(full_answer)-1]='\0';
 
+        if (full_answer != NULL) {
+          strcpy(guess_all_1_arg.parameter,full_answer);
+          result_8 = guess_all_1(&guess_all_1_arg, clnt);
+          if (result_8 == (server_message *) NULL) {
+            clnt_perror (clnt, "call failed");
+          } else {
+            if (result_8->opcode == COMPLETED){
+              printf("Congratulation! You have completed the quiz!\n");
+              game_status = GAME_OVER;
+              sleep(2);
+            } else {
+              printf("Your answer is wrong. See you again!\n" );
+              game_status = GAME_RUNNING;
+            }
+          }
+        }
         break;
       case '3': break;
       default: break;
     }
-  } while (choice!='3');
+  } while (choice!='3' && game_status == GAME_RUNNING);
 }
 
 void
@@ -150,9 +173,9 @@ wheel_prog_1(char *host)
     case '1':
       strcpy(register_1_arg.command,"REGISTER");
       do {
-        printf("Enter the username: ");
+        printf("Enter the username (without space): ");
   		  scanf("%s%*c", register_1_arg.current_user.name);
-  		  printf("Enter the password: ");
+  		  printf("Enter the password (without space): ");
   		  scanf("%s%*c", register_1_arg.current_user.pass);
 
         result_1 = register_1(&register_1_arg, clnt);
@@ -167,6 +190,7 @@ wheel_prog_1(char *host)
         }
         else if (result_1->opcode == 1){
           printf("Your username is existed. Please register with another name.\n");
+          session.sessStatus = NOT_AUTHENTICATED;
         }
       } while (result_1->opcode == 1);
       break;
@@ -235,10 +259,6 @@ wheel_prog_1(char *host)
 		clnt_perror (clnt, "call failed");
 	}
 
-  result_8 = guess_all_1(&guess_all_1_arg, clnt);
-	if (result_8 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
 	result_9 = surender_1(&surender_1_arg, clnt);
 	if (result_9 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");

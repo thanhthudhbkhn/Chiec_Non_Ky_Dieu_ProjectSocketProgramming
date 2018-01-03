@@ -1,3 +1,19 @@
+const NOT_AUTHENTICATED = 0;
+const AUTHENTICATED = 1;
+const PLAYING_GAME = 0;
+const QUIT_GAME = 1;
+const GAME_RUNNING = 0;
+const GAME_OVER = 1;
+const THE_DOUBLE = 10;
+const THE_DIVIDE = 11;
+const LOST_A_TURN = 12;
+const GAIN_A_TURN = 13;
+const LUCKY = 14;
+const CORRECT = 70;
+const INCORRECT = 71;
+const COMPLETED = 72;
+const DELIMITER = "####";
+
 struct User{
     char name[30];
     char pass[30];
