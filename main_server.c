@@ -75,23 +75,23 @@ char lower_to_upper(char lower) {
 
 int get_score(int spin_code, int score){
   switch (spin_code) {
-		case 0:
-		case 1:
-		case 2:
-		case 3:
-		case 4:
-		case 5:
-		case 6:
-		case 7:
-		case 8:
-		case 9:
+    case 100_SCORES:
+		case 200_SCORES:
+		case 300_SCORES:
+		case 400_SCORES:
+		case 500_SCORES:
+		case 600_SCORES:
+		case 700_SCORES:
+		case 800_SCORES:
+		case 900_SCORES:
+		case 1000_SCORES:
       score+=(spin_code+1)*100;
       return score;
-		case 10: return score*=2;
-		case 11: return score/=2;
-		case 12: printf("You got the Mat luot\n"); break;
-		case 13: printf("You got the Them luot\n"); break;
-		case 14: printf("You got the May man\n"); break;
+		case THE_DOUBLE: return score*=2;
+		case THE_DIVIDE: return score/=2;
+		case LOST_A_TURN: printf("You got the Mat luot\n"); break;
+		case GAIN_A_TURN: printf("You got the Them luot\n"); break;
+		case LUCKY: printf("You got the May man\n"); break;
 		default: break;
 	}
   return current_game.joiners[0].score;

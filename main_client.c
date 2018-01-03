@@ -9,8 +9,6 @@
 #include "main.h"
 #include "print.h"
 #include "validate.h"
-#define NOT_AUTHENTICATED 0
-#define AUTHENTICATED 1
 
 struct Session{
     struct User user;
@@ -37,9 +35,9 @@ int guess(int opcode, CLIENT *clnt) {
 	if (result_7 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	} else {
-    if (result_7->opcode == 70) printf("Good job! The answer contains '%c'.\n", character );
-    else if (result_7->opcode == 71) printf("Oops! The answer does not contain '%c'.\n", character );
-    else if (result_7->opcode == 72) {
+    if (result_7->opcode == CORRECT) printf("Good job! The answer contains '%c'.\n", character );
+    else if (result_7->opcode == INCORRECT) printf("Oops! The answer does not contain '%c'.\n", character );
+    else if (result_7->opcode == COMPLETED) {
       printf("Congratulation! You have complete the answer!\n");
       sleep(2);
     }
@@ -74,21 +72,21 @@ void play_game(CLIENT *clnt) {
           system("clear");
           print_spin_result(result_5->opcode);
           switch (result_5->opcode) {
-            case 0: game_status = guess(0,clnt); break;
-        		case 1: game_status = guess(1,clnt); break;
-        		case 2: game_status = guess(2,clnt); break;
-        		case 3: game_status = guess(3,clnt); break;
-        		case 4: game_status = guess(4,clnt); break;
-        		case 5: game_status = guess(5,clnt); break;
-        		case 6: game_status = guess(6,clnt); break;
-        		case 7: game_status = guess(7,clnt); break;
-        		case 8: game_status = guess(8,clnt); break;
-        		case 9: game_status = guess(9,clnt); break;
-        		case 10: game_status = guess(10,clnt); break;
-        		case 11: game_status = guess(11,clnt); break;
-        		case 12: game_status = guess(12,clnt); break;
-        		case 13: game_status = guess(13,clnt); break;
-        		case 14: game_status = guess(14,clnt); break;
+            case 100_SCORES: game_status = guess(100_SCORES,clnt); break;
+        		case 200_SCORES: game_status = guess(200_SCORES,clnt); break;
+        		case 300_SCORES: game_status = guess(300_SCORES,clnt); break;
+        		case 400_SCORES: game_status = guess(400_SCORES,clnt); break;
+        		case 500_SCORES: game_status = guess(500_SCORES,clnt); break;
+        		case 600_SCORES: game_status = guess(600_SCORES,clnt); break;
+        		case 700_SCORES: game_status = guess(700_SCORES,clnt); break;
+        		case 800_SCORES: game_status = guess(800_SCORES,clnt); break;
+        		case 900_SCORES: game_status = guess(900_SCORES,clnt); break;
+        		case 1000_SCORES: game_status = guess(1000_SCORES,clnt); break;
+        		case THE_DOUBLE: game_status = guess(THE_DOUBLE,clnt); break;
+        		case THE_DIVIDE: game_status = guess(THE_DIVIDE,clnt); break;
+        		case LOST_A_TURN: game_status = guess(LOST_A_TURN,clnt); break;
+        		case GAIN_A_TURN: game_status = guess(GAIN_A_TURN,clnt); break;
+        		case LUCKY: game_status = guess(LUCKY,clnt); break;
         		default: break;
           }
         }
@@ -151,9 +149,9 @@ wheel_prog_1(char *host)
     case '1':
       strcpy(register_1_arg.command,"REGISTER");
       do {
-        printf("Enter the username: ");
+        printf("Enter the username (without space): ");
   		  scanf("%s%*c", register_1_arg.current_user.name);
-  		  printf("Enter the password: ");
+  		  printf("Enter the password (without space): ");
   		  scanf("%s%*c", register_1_arg.current_user.pass);
 
         result_1 = register_1(&register_1_arg, clnt);
@@ -168,6 +166,7 @@ wheel_prog_1(char *host)
         }
         else if (result_1->opcode == 1){
           printf("Your username is existed. Please register with another name.\n");
+          session.sessStatus = NOT_AUTHENTICATED;
         }
       } while (result_1->opcode == 1);
       break;

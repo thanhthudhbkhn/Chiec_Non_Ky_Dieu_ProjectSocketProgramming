@@ -1,8 +1,29 @@
+const NOT_AUTHENTICATED = 0;
+const AUTHENTICATED = 1;
 const PLAYING_GAME = 0;
 const QUIT_GAME = 1;
 const GAME_RUNNING = 0;
 const GAME_OVER = 1;
 const DELIMITER = "####";
+const 100_SCORES = 0;
+const 200_SCORES = 1;
+const 300_SCORES = 2;
+const 400_SCORES = 3;
+const 500_SCORES = 4;
+const 600_SCORES = 5;
+const 700_SCORES = 6;
+const 800_SCORES = 7;
+const 900_SCORES = 8;
+const 1000_SCORES = 9;
+const THE_DOUBLE = 10;
+const THE_DIVIDE = 11;
+const LOST_A_TURN = 12;
+const GAIN_A_TURN = 13;
+const LUCKY = 14;
+const CORRECT = 70;
+const INCORRECT = 71;
+const COMPLETED = 72;
+
 
 struct User{
     char name[30];
