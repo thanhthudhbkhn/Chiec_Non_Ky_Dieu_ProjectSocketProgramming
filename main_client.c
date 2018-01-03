@@ -4,6 +4,7 @@
  * as a guideline for developing your own functions.
  */
 #include <stdio.h>
+#include <unistd.h>
 #include <string.h>
 #include "main.h"
 #include "print.h"
@@ -59,6 +60,8 @@ void play_game(CLIENT *clnt) {
         if (result_5 == (server_message *) NULL) {
           clnt_perror (clnt, "call failed");
         } else {
+          sleep(1);
+          system("clear");
           print_spin_result(result_5->opcode);
           switch (result_5->opcode) {
             case 0: guess(0,clnt); break;
