@@ -1,3 +1,9 @@
+const PLAYING_GAME = 0;
+const QUIT_GAME = 1;
+const GAME_RUNNING = 0;
+const GAME_OVER = 1;
+const DELIMITER = "####";
+
 struct User{
     char name[30];
     char pass[30];

@@ -18,7 +18,7 @@ struct Session{
     struct sockaddr_in cliaddr;
 };
 
-void guess(int opcode, CLIENT *clnt) {
+int guess(int opcode, CLIENT *clnt) {
 	client_message  guess_1_arg;
 	server_message  *result_7;
   char character;
@@ -50,12 +50,13 @@ void guess(int opcode, CLIENT *clnt) {
     printf("    %s\n",result_7->current_game.answerAtMoment );
     printf("Your score: %d!\n",result_7->current_game.joiners[0].score );
   }
-
+  return result_7->current_game.status;
 }
 
 void play_game(CLIENT *clnt) {
 	server_message  *result_5;
 	client_message  spin_1_arg;
+  int game_status = GAME_RUNNING;
   char choice;
   do {
     menu_spin();
@@ -73,21 +74,21 @@ void play_game(CLIENT *clnt) {
           system("clear");
           print_spin_result(result_5->opcode);
           switch (result_5->opcode) {
-            case 0: guess(0,clnt); break;
-        		case 1: guess(1,clnt); break;
-        		case 2: guess(2,clnt); break;
-        		case 3: guess(3,clnt); break;
-        		case 4: guess(4,clnt); break;
-        		case 5: guess(5,clnt); break;
-        		case 6: guess(6,clnt); break;
-        		case 7: guess(7,clnt); break;
-        		case 8: guess(8,clnt); break;
-        		case 9: guess(9,clnt); break;
-        		case 10: guess(10,clnt); break;
-        		case 11: guess(11,clnt); break;
-        		case 12: guess(12,clnt); break;
-        		case 13: guess(13,clnt); break;
-        		case 14: guess(14,clnt); break;
+            case 0: game_status = guess(0,clnt); break;
+        		case 1: game_status = guess(1,clnt); break;
+        		case 2: game_status = guess(2,clnt); break;
+        		case 3: game_status = guess(3,clnt); break;
+        		case 4: game_status = guess(4,clnt); break;
+        		case 5: game_status = guess(5,clnt); break;
+        		case 6: game_status = guess(6,clnt); break;
+        		case 7: game_status = guess(7,clnt); break;
+        		case 8: game_status = guess(8,clnt); break;
+        		case 9: game_status = guess(9,clnt); break;
+        		case 10: game_status = guess(10,clnt); break;
+        		case 11: game_status = guess(11,clnt); break;
+        		case 12: game_status = guess(12,clnt); break;
+        		case 13: game_status = guess(13,clnt); break;
+        		case 14: game_status = guess(14,clnt); break;
         		default: break;
           }
         }
@@ -98,7 +99,7 @@ void play_game(CLIENT *clnt) {
       case '3': break;
       default: break;
     }
-  } while (choice!='3');
+  } while (choice!='3' && game_status == GAME_RUNNING);
 }
 
 void

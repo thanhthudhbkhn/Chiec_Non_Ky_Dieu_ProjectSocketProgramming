@@ -8,11 +8,6 @@
 #include "validate.h"
 #include <stdlib.h>
 #include <string.h>
-#define PLAYING_GAME 0
-#define QUIT_GAME 1
-#define GAME_RUNNING 0
-#define GAME_OVER 1
-#define DELIMITER "####"
 
 struct game current_game;
 
@@ -177,7 +172,7 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
   int i=0;
-  int done = 1;
+  current_game.status = GAME_OVER;
   int spin_code;
   char *character;
   char *answer = current_game.quiz.answer;
@@ -201,10 +196,10 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
   //check if the answer is completed?
   for(i=0;i<strlen(current_game.answerAtMoment);i++) {
     if (current_game.answerAtMoment[i]=='*'){
-      done = 0;
+      current_game.status = GAME_RUNNING;
     }
   }
-  if (done == 1) result.opcode = 72;
+  if (current_game.status == GAME_OVER) result.opcode = 72;
   result.current_game = current_game;
   // printf("answerAtMoment:%s.\n",result.current_game.answerAtMoment );
 	return &result;

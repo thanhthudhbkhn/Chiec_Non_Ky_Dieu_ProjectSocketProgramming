@@ -13,6 +13,11 @@
 extern "C" {
 #endif
 
+#define PLAYING_GAME 0
+#define QUIT_GAME 1
+#define GAME_RUNNING 0
+#define GAME_OVER 1
+#define DELIMITER "####"
 
 struct User {
 	char name[30];
