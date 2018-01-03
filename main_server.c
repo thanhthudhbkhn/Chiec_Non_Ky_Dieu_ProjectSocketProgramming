@@ -91,8 +91,8 @@ int get_score(int spin_code, int score){
       return score;
 		case THE_DOUBLE: return score*=2;
 		case THE_DIVIDE: return score/=2;
-		case LOST_A_TURN: break;
-		case GAIN_A_TURN: break;
+		// case LOST_A_TURN: break;
+		// case GAIN_A_TURN: break;
 		case LUCKY: break;
 		default: break;
 	}
@@ -153,7 +153,7 @@ server_message *
 spin_1_svc(client_message *argp, struct svc_req *rqstp)
 {
   static server_message result;
-	result.opcode = rand()%15;
+	result.opcode = rand()%13;
 	return &result;
 }
 
@@ -191,9 +191,15 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
       if (answer[i] == character[0]) {
         current_game.answerAtMoment[i] = character[0];
         result.opcode = 70;
-        current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
+        if (spin_code != THE_DIVIDE) {
+          current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
+        }
       }
     }
+  }
+
+  if (result.opcode == 71 && spin_code == THE_DIVIDE) {
+    current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
   }
   //check if the answer is completed?
   for(i=0;i<strlen(current_game.answerAtMoment);i++) {
@@ -219,7 +225,10 @@ guess_all_1_svc(client_message *argp, struct svc_req *rqstp)
   if (strcmp(full_answer,current_game.quiz.answer) == 0) {
     result.opcode = COMPLETED;
     current_game.status = GAME_OVER;
-  } else current_game.status = GAME_RUNNING;
+  } else {
+    result.opcode = INCORRECT;
+    current_game.status = GAME_RUNNING;
+  }
   result.current_game = current_game;
 	return &result;
 }

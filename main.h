@@ -21,9 +21,9 @@ extern "C" {
 #define GAME_OVER 1
 #define THE_DOUBLE 10
 #define THE_DIVIDE 11
-#define LOST_A_TURN 12
-#define GAIN_A_TURN 13
-#define LUCKY 14
+// #define LOST_A_TURN 12
+// #define GAIN_A_TURN 13
+#define LUCKY 12
 #define CORRECT 70
 #define INCORRECT 71
 #define COMPLETED 72
