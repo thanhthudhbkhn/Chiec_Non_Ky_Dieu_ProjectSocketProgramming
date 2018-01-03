@@ -29,9 +29,6 @@ wheel_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		client_message guess_1_arg;
 		client_message guess_all_1_arg;
 		client_message surender_1_arg;
-		client_message function1_1_arg;
-		client_message function2_1_arg;
-		client_message function3_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -94,24 +91,6 @@ wheel_prog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		_xdr_argument = (xdrproc_t) xdr_client_message;
 		_xdr_result = (xdrproc_t) xdr_server_message;
 		local = (char *(*)(char *, struct svc_req *)) surender_1_svc;
-		break;
-
-	case FUNCTION1:
-		_xdr_argument = (xdrproc_t) xdr_client_message;
-		_xdr_result = (xdrproc_t) xdr_server_message;
-		local = (char *(*)(char *, struct svc_req *)) function1_1_svc;
-		break;
-
-	case FUNCTION2:
-		_xdr_argument = (xdrproc_t) xdr_client_message;
-		_xdr_result = (xdrproc_t) xdr_server_message;
-		local = (char *(*)(char *, struct svc_req *)) function2_1_svc;
-		break;
-
-	case FUNCTION3:
-		_xdr_argument = (xdrproc_t) xdr_client_message;
-		_xdr_result = (xdrproc_t) xdr_server_message;
-		local = (char *(*)(char *, struct svc_req *)) function3_1_svc;
 		break;
 
 	default:

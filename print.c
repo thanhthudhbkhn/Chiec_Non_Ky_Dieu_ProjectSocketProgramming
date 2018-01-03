@@ -4,21 +4,21 @@
 
 void print_spin_result(int spin_code){
 	switch (spin_code) {
-		case 0: printf("You got 100 scored!\n"); break;
-		case 1: printf("You got 200 scored!\n"); break;
-		case 2: printf("You got 300 scored!\n"); break;
-		case 3: printf("You got 400 scored!\n"); break;
-		case 4: printf("You got 500 scored!\n"); break;
-		case 5: printf("You got 600 scored!\n"); break;
-		case 6: printf("You got 700 scored!\n"); break;
-		case 7: printf("You got 800 scored!\n"); break;
-		case 8: printf("You got 900 scored!\n"); break;
-		case 9: printf("You got 1000 scored!\n"); break;
-		case THE_DOUBLE: printf("You got the Double. Your score will be x2.\n"); break;
-		case THE_DIVIDE: printf("You got the Divide by 2. Your score will be :2 :( \n"); break;
-		case LOST_A_TURN: printf("You got the Mat luot\n"); break;
-		case GAIN_A_TURN: printf("You got the Them luot\n"); break;
-		case LUCKY: printf("You got the May man\n"); break;
+		case 0: printf("You will earn 100 scores for each correct character!\n"); break;
+		case 1: printf("You will earn 200 scores for each correct character!\n"); break;
+		case 2: printf("You will earn 300 scores for each correct character!\n"); break;
+		case 3: printf("You will earn 400 scores for each correct character!\n"); break;
+		case 4: printf("You will earn 500 scores for each correct character!\n"); break;
+		case 5: printf("You will earn 600 scores for each correct character!\n"); break;
+		case 6: printf("You will earn 700 scores for each correct character!\n"); break;
+		case 7: printf("You will earn 800 scores for each correct character!\n"); break;
+		case 8: printf("You will earn 900 scores for each correct character!\n"); break;
+		case 9: printf("You will earn 1000 scores for each correct character!\n"); break;
+		case THE_DOUBLE: printf("You got the Double. Your current score will be x2 for each correct character.\n"); break;
+		case THE_DIVIDE: printf("You got the Divide by 2. Your score will be :2 if your guess is incorrect.\n"); break;
+		// case LOST_A_TURN: printf("You got the Mat luot\n"); break;
+		// case GAIN_A_TURN: printf("You got the Them luot\n"); break;
+		case LUCKY: printf("You got Lucky. You can choose to open a position of the answer.\n"); break;
 		default: break;
 	}
 }

@@ -22,7 +22,7 @@ int guess(int opcode, CLIENT *clnt) {
   char character;
   char tmp[4];
 
-  printf("I think the answer contains this character (please enter only a character from 'a' to 'z'): ");
+  printf("(Please enter only a character from 'a' to 'z') I guess: ");
   scanf("%c%*c",&character);
 
   strcpy(guess_1_arg.command,"GUESS");
@@ -87,8 +87,8 @@ void play_game(CLIENT *clnt) {
         		case 9: game_status = guess(9,clnt); break;
         		case THE_DOUBLE: game_status = guess(THE_DOUBLE,clnt); break;
         		case THE_DIVIDE: game_status = guess(THE_DIVIDE,clnt); break;
-        		case LOST_A_TURN: game_status = guess(LOST_A_TURN,clnt); break;
-        		case GAIN_A_TURN: game_status = guess(GAIN_A_TURN,clnt); break;
+        		// case LOST_A_TURN: game_status = guess(LOST_A_TURN,clnt); break;
+        		// case GAIN_A_TURN: game_status = guess(GAIN_A_TURN,clnt); break;
         		case LUCKY: game_status = guess(LUCKY,clnt); break;
         		default: break;
           }
@@ -109,12 +109,11 @@ void play_game(CLIENT *clnt) {
           } else {
             if (result_8->opcode == COMPLETED){
               printf("Congratulation! You have completed the quiz!\n");
-              game_status = GAME_OVER;
               sleep(2);
             } else {
               printf("Your answer is wrong. See you again!\n" );
-              game_status = GAME_RUNNING;
             }
+            game_status = GAME_OVER;
           }
         }
         break;
@@ -146,12 +145,6 @@ wheel_prog_1(char *host)
 	client_message  guess_all_1_arg;
 	server_message  *result_9;
 	client_message  surender_1_arg;
-	server_message  *result_10;
-	client_message  function1_1_arg;
-	server_message  *result_11;
-	client_message  function2_1_arg;
-	server_message  *result_12;
-	client_message  function3_1_arg;
   char choice;
   struct Session session;
   struct game current_game;
@@ -261,18 +254,6 @@ wheel_prog_1(char *host)
 
 	result_9 = surender_1(&surender_1_arg, clnt);
 	if (result_9 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_10 = function1_1(&function1_1_arg, clnt);
-	if (result_10 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_11 = function2_1(&function2_1_arg, clnt);
-	if (result_11 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_12 = function3_1(&function3_1_arg, clnt);
-	if (result_12 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
 #ifndef	DEBUG
