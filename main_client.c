@@ -146,12 +146,6 @@ wheel_prog_1(char *host)
 	client_message  guess_all_1_arg;
 	server_message  *result_9;
 	client_message  surender_1_arg;
-	server_message  *result_10;
-	client_message  function1_1_arg;
-	server_message  *result_11;
-	client_message  function2_1_arg;
-	server_message  *result_12;
-	client_message  function3_1_arg;
   char choice;
   struct Session session;
   struct game current_game;
@@ -261,18 +255,6 @@ wheel_prog_1(char *host)
 
 	result_9 = surender_1(&surender_1_arg, clnt);
 	if (result_9 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_10 = function1_1(&function1_1_arg, clnt);
-	if (result_10 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_11 = function2_1(&function2_1_arg, clnt);
-	if (result_11 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
-	result_12 = function3_1(&function3_1_arg, clnt);
-	if (result_12 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
 #ifndef	DEBUG

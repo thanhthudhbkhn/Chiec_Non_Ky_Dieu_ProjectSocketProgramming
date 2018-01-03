@@ -101,15 +101,6 @@ extern  server_message * guess_all_1_svc(client_message *, struct svc_req *);
 #define SURENDER 9
 extern  server_message * surender_1(client_message *, CLIENT *);
 extern  server_message * surender_1_svc(client_message *, struct svc_req *);
-#define FUNCTION1 10
-extern  server_message * function1_1(client_message *, CLIENT *);
-extern  server_message * function1_1_svc(client_message *, struct svc_req *);
-#define FUNCTION2 11
-extern  server_message * function2_1(client_message *, CLIENT *);
-extern  server_message * function2_1_svc(client_message *, struct svc_req *);
-#define FUNCTION3 12
-extern  server_message * function3_1(client_message *, CLIENT *);
-extern  server_message * function3_1_svc(client_message *, struct svc_req *);
 extern int wheel_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -140,15 +131,6 @@ extern  server_message * guess_all_1_svc();
 #define SURENDER 9
 extern  server_message * surender_1();
 extern  server_message * surender_1_svc();
-#define FUNCTION1 10
-extern  server_message * function1_1();
-extern  server_message * function1_1_svc();
-#define FUNCTION2 11
-extern  server_message * function2_1();
-extern  server_message * function2_1_svc();
-#define FUNCTION3 12
-extern  server_message * function3_1();
-extern  server_message * function3_1_svc();
 extern int wheel_prog_1_freeresult ();
 #endif /* K&R C */
 

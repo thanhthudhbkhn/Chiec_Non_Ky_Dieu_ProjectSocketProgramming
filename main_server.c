@@ -89,9 +89,9 @@ int get_score(int spin_code, int score){
       return score;
 		case THE_DOUBLE: return score*=2;
 		case THE_DIVIDE: return score/=2;
-		case LOST_A_TURN: printf("You got the Mat luot\n"); break;
-		case GAIN_A_TURN: printf("You got the Them luot\n"); break;
-		case LUCKY: printf("You got the May man\n"); break;
+		case LOST_A_TURN: break;
+		case GAIN_A_TURN: break;
+		case LUCKY: break;
 		default: break;
 	}
   return current_game.joiners[0].score;
@@ -224,42 +224,6 @@ guess_all_1_svc(client_message *argp, struct svc_req *rqstp)
 
 server_message *
 surender_1_svc(client_message *argp, struct svc_req *rqstp)
-{
-	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
-	return &result;
-}
-
-server_message *
-function1_1_svc(client_message *argp, struct svc_req *rqstp)
-{
-	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
-	return &result;
-}
-
-server_message *
-function2_1_svc(client_message *argp, struct svc_req *rqstp)
-{
-	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
-	return &result;
-}
-
-server_message *
-function3_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
 
