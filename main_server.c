@@ -75,16 +75,16 @@ char lower_to_upper(char lower) {
 
 int get_score(int spin_code, int score){
   switch (spin_code) {
-    case 100_SCORES:
-		case 200_SCORES:
-		case 300_SCORES:
-		case 400_SCORES:
-		case 500_SCORES:
-		case 600_SCORES:
-		case 700_SCORES:
-		case 800_SCORES:
-		case 900_SCORES:
-		case 1000_SCORES:
+    case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
       score+=(spin_code+1)*100;
       return score;
 		case THE_DOUBLE: return score*=2;
@@ -209,11 +209,16 @@ server_message *
 guess_all_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
+  char full_answer[100];
+  int i;
+  for (int i = 0; i < strlen(argp->parameter); i++) {
+    full_answer[i] = lower_to_upper(argp->parameter[i]);
+  }
+  if (strcmp(full_answer,current_game.quiz.answer) == 0) {
+    result.opcode = COMPLETED;
+    current_game.status = GAME_OVER;
+  } else current_game.status = GAME_RUNNING;
+  result.current_game = current_game;
 	return &result;
 }
 

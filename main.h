@@ -13,10 +13,20 @@
 extern "C" {
 #endif
 
+#define NOT_AUTHENTICATED 0
+#define AUTHENTICATED 1
 #define PLAYING_GAME 0
 #define QUIT_GAME 1
 #define GAME_RUNNING 0
 #define GAME_OVER 1
+#define THE_DOUBLE 10
+#define THE_DIVIDE 11
+#define LOST_A_TURN 12
+#define GAIN_A_TURN 13
+#define LUCKY 14
+#define CORRECT 70
+#define INCORRECT 71
+#define COMPLETED 72
 #define DELIMITER "####"
 
 struct User {

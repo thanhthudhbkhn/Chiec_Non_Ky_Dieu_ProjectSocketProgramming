@@ -38,7 +38,7 @@ int guess(int opcode, CLIENT *clnt) {
     if (result_7->opcode == CORRECT) printf("Good job! The answer contains '%c'.\n", character );
     else if (result_7->opcode == INCORRECT) printf("Oops! The answer does not contain '%c'.\n", character );
     else if (result_7->opcode == COMPLETED) {
-      printf("Congratulation! You have complete the answer!\n");
+      printf("Congratulation! You have completed the quiz!\n");
       sleep(2);
     }
 
@@ -54,7 +54,10 @@ int guess(int opcode, CLIENT *clnt) {
 void play_game(CLIENT *clnt) {
 	server_message  *result_5;
 	client_message  spin_1_arg;
+	server_message  *result_8;
+	client_message  guess_all_1_arg;
   int game_status = GAME_RUNNING;
+  char full_answer[100];
   char choice;
   do {
     menu_spin();
@@ -72,16 +75,16 @@ void play_game(CLIENT *clnt) {
           system("clear");
           print_spin_result(result_5->opcode);
           switch (result_5->opcode) {
-            case 100_SCORES: game_status = guess(100_SCORES,clnt); break;
-        		case 200_SCORES: game_status = guess(200_SCORES,clnt); break;
-        		case 300_SCORES: game_status = guess(300_SCORES,clnt); break;
-        		case 400_SCORES: game_status = guess(400_SCORES,clnt); break;
-        		case 500_SCORES: game_status = guess(500_SCORES,clnt); break;
-        		case 600_SCORES: game_status = guess(600_SCORES,clnt); break;
-        		case 700_SCORES: game_status = guess(700_SCORES,clnt); break;
-        		case 800_SCORES: game_status = guess(800_SCORES,clnt); break;
-        		case 900_SCORES: game_status = guess(900_SCORES,clnt); break;
-        		case 1000_SCORES: game_status = guess(1000_SCORES,clnt); break;
+            case 0: game_status = guess(0,clnt); break;
+        		case 1: game_status = guess(1,clnt); break;
+        		case 2: game_status = guess(2,clnt); break;
+        		case 3: game_status = guess(3,clnt); break;
+        		case 4: game_status = guess(4,clnt); break;
+        		case 5: game_status = guess(5,clnt); break;
+        		case 6: game_status = guess(6,clnt); break;
+        		case 7: game_status = guess(7,clnt); break;
+        		case 8: game_status = guess(8,clnt); break;
+        		case 9: game_status = guess(9,clnt); break;
         		case THE_DOUBLE: game_status = guess(THE_DOUBLE,clnt); break;
         		case THE_DIVIDE: game_status = guess(THE_DIVIDE,clnt); break;
         		case LOST_A_TURN: game_status = guess(LOST_A_TURN,clnt); break;
@@ -92,7 +95,28 @@ void play_game(CLIENT *clnt) {
         }
         break;
       case '2':
+        printf("Enter the full answer: ");
+        fgets(full_answer, 100, stdin);
+        int c;
+        // while ((c=getchar()) != '\n' && c != EOF);
+        full_answer[strlen(full_answer)-1]='\0';
 
+        if (full_answer != NULL) {
+          strcpy(guess_all_1_arg.parameter,full_answer);
+          result_8 = guess_all_1(&guess_all_1_arg, clnt);
+          if (result_8 == (server_message *) NULL) {
+            clnt_perror (clnt, "call failed");
+          } else {
+            if (result_8->opcode == COMPLETED){
+              printf("Congratulation! You have completed the quiz!\n");
+              game_status = GAME_OVER;
+              sleep(2);
+            } else {
+              printf("Your answer is wrong. See you again!\n" );
+              game_status = GAME_RUNNING;
+            }
+          }
+        }
         break;
       case '3': break;
       default: break;
@@ -235,10 +259,6 @@ wheel_prog_1(char *host)
 		clnt_perror (clnt, "call failed");
 	}
 
-  result_8 = guess_all_1(&guess_all_1_arg, clnt);
-	if (result_8 == (server_message *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
 	result_9 = surender_1(&surender_1_arg, clnt);
 	if (result_9 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");

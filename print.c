@@ -4,16 +4,16 @@
 
 void print_spin_result(int spin_code){
 	switch (spin_code) {
-		case 100_SCORES: printf("You got 100 scored!\n"); break;
-		case 200_SCORES: printf("You got 200 scored!\n"); break;
-		case 300_SCORES: printf("You got 300 scored!\n"); break;
-		case 400_SCORES: printf("You got 400 scored!\n"); break;
-		case 500_SCORES: printf("You got 500 scored!\n"); break;
-		case 600_SCORES: printf("You got 600 scored!\n"); break;
-		case 700_SCORES: printf("You got 700 scored!\n"); break;
-		case 800_SCORES: printf("You got 800 scored!\n"); break;
-		case 900_SCORES: printf("You got 900 scored!\n"); break;
-		case 1000_SCORES: printf("You got 1000 scored!\n"); break;
+		case 0: printf("You got 100 scored!\n"); break;
+		case 1: printf("You got 200 scored!\n"); break;
+		case 2: printf("You got 300 scored!\n"); break;
+		case 3: printf("You got 400 scored!\n"); break;
+		case 4: printf("You got 500 scored!\n"); break;
+		case 5: printf("You got 600 scored!\n"); break;
+		case 6: printf("You got 700 scored!\n"); break;
+		case 7: printf("You got 800 scored!\n"); break;
+		case 8: printf("You got 900 scored!\n"); break;
+		case 9: printf("You got 1000 scored!\n"); break;
 		case THE_DOUBLE: printf("You got the Double. Your score will be x2.\n"); break;
 		case THE_DIVIDE: printf("You got the Divide by 2. Your score will be :2 :( \n"); break;
 		case LOST_A_TURN: printf("You got the Mat luot\n"); break;
