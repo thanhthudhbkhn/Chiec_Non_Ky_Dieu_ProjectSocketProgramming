@@ -6,6 +6,7 @@
 
 #include "main.h"
 #include "validate.h"
+#include <time.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -32,11 +33,12 @@ struct Quiz get_the_quiz() {
   char *tokens;
   char line[100];
   FILE *fp = fopen("./database/quiz.db","r");
+  srand(time(NULL));
   if(fp!=NULL) {
     if (fgets(temp, 100, fp)!=NULL) {
       strcpy(line,temp);
       while (fgets(temp, 100, fp) != NULL) {
-        if (rand()%2 == 0) strcpy(line,temp);
+        if (rand()%3 == 0) strcpy(line,temp);
       }
     }
     fclose(fp);
