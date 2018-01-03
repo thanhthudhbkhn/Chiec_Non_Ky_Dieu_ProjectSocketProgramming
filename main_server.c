@@ -61,8 +61,21 @@ struct Quiz get_the_quiz() {
 char * setdefaultAnswer(char* answer) {
   int i;
   char *defaultAnswer = answer;
-  for (i=0;i<strlen(answer);i++) defaultAnswer[i] = '*';
+  for (i=0;i<strlen(answer);i++) {
+    if (defaultAnswer[i]!=' ') {
+      defaultAnswer[i] = '*';
+    }
+  }
   return defaultAnswer;
+}
+
+char lower_to_upper(char lower) {
+  char upper;
+  if (lower >= 'a' && lower <= 'z') {
+    upper = ('A' + lower - 'a');
+    return upper;
+  }
+  else return lower;
 }
 
 server_message *
@@ -150,21 +163,25 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
 
   spin_code = atoi(strtok(argp->parameter, DELIMITER));
   character = strtok(NULL,DELIMITER);
+  *character = lower_to_upper(*character);
   result.opcode = 71;
   for(i=0;i<strlen(current_game.answerAtMoment);i++) {
     if (current_game.answerAtMoment[i]=='*'){
-      done = 0;
       if (answer[i] == character[0]) {
         current_game.answerAtMoment[i] = character[0];
         result.opcode = 70;
       }
     }
   }
-  if (done == 1) printf("congrate\n" );
-  if (result.opcode == 70) {//correct
-    strcpy(result.current_game.answerAtMoment, current_game.answerAtMoment);
-  }  else result.opcode = 71;
-  printf("answerAtMoment:%s.\n",current_game.answerAtMoment );
+  //check if the answer is completed?
+  for(i=0;i<strlen(current_game.answerAtMoment);i++) {
+    if (current_game.answerAtMoment[i]=='*'){
+      done = 0;
+    }
+  }
+  if (done == 1) result.opcode = 72;
+  strcpy(result.current_game.answerAtMoment, current_game.answerAtMoment);
+  // printf("answerAtMoment:%s.\n",result.current_game.answerAtMoment );
 	return &result;
 }
 

@@ -37,9 +37,10 @@ void guess(int opcode, CLIENT *clnt) {
 	if (result_7 == (server_message *) NULL) {
 		clnt_perror (clnt, "call failed");
 	} else {
-    printf("%s\n",result_7->current_game.answerAtMoment );
-    if (result_7->opcode == 70) printf("Good job\n" );
-    else if (result_7->opcode == 71) printf("so sad\n");
+    if (result_7->opcode == 70) printf("Good job! The answer contains '%c'.\n", character );
+    else if (result_7->opcode == 71) printf("Oops! The answer does not contain '%c'.\n", character );
+    else if (result_7->opcode == 72) printf("Congratulation! You have complete the answer!\n");
+    printf(".%s.\n",result_7->current_game.answerAtMoment );
   }
 
 }
@@ -60,7 +61,7 @@ void play_game(CLIENT *clnt) {
         if (result_5 == (server_message *) NULL) {
           clnt_perror (clnt, "call failed");
         } else {
-          sleep(1);
+          // sleep(1);
           system("clear");
           print_spin_result(result_5->opcode);
           switch (result_5->opcode) {
