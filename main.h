@@ -13,15 +13,57 @@
 extern "C" {
 #endif
 
+#define NOT_AUTHENTICATED 0
+#define AUTHENTICATED 1
+#define PLAYING_GAME 0
+#define QUIT_GAME 1
+#define GAME_RUNNING 0
+#define GAME_OVER 1
+#define THE_DOUBLE 10
+#define THE_DIVIDE 11
+#define CORRECT 70
+#define INCORRECT 71
+#define COMPLETED 72
+#define DELIMITER "####"
+
+struct User {
+	char name[30];
+	char pass[30];
+	int accStatus;
+};
+typedef struct User User;
 
 struct client_message {
 	char command[100];
 	char parameter[100];
+	User current_user;
 };
 typedef struct client_message client_message;
 
+struct Joiner {
+	struct User user;
+	int score;
+	int in_game;
+};
+typedef struct Joiner Joiner;
+
+struct Quiz {
+	char question[100];
+	char answer[100];
+};
+typedef struct Quiz Quiz;
+
+struct game {
+	int status;
+	struct Joiner joiners[3];
+	struct Quiz quiz;
+	char answerAtMoment[100];
+};
+typedef struct game game;
+
 struct server_message {
 	int opcode;
+	game current_game;
 };
 typedef struct server_message server_message;
 
@@ -56,15 +98,6 @@ extern  server_message * guess_all_1_svc(client_message *, struct svc_req *);
 #define SURENDER 9
 extern  server_message * surender_1(client_message *, CLIENT *);
 extern  server_message * surender_1_svc(client_message *, struct svc_req *);
-#define FUNCTION1 10
-extern  server_message * function1_1(client_message *, CLIENT *);
-extern  server_message * function1_1_svc(client_message *, struct svc_req *);
-#define FUNCTION2 11
-extern  server_message * function2_1(client_message *, CLIENT *);
-extern  server_message * function2_1_svc(client_message *, struct svc_req *);
-#define FUNCTION3 12
-extern  server_message * function3_1(client_message *, CLIENT *);
-extern  server_message * function3_1_svc(client_message *, struct svc_req *);
 extern int wheel_prog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -95,26 +128,25 @@ extern  server_message * guess_all_1_svc();
 #define SURENDER 9
 extern  server_message * surender_1();
 extern  server_message * surender_1_svc();
-#define FUNCTION1 10
-extern  server_message * function1_1();
-extern  server_message * function1_1_svc();
-#define FUNCTION2 11
-extern  server_message * function2_1();
-extern  server_message * function2_1_svc();
-#define FUNCTION3 12
-extern  server_message * function3_1();
-extern  server_message * function3_1_svc();
 extern int wheel_prog_1_freeresult ();
 #endif /* K&R C */
 
 /* the xdr functions */
 
 #if defined(__STDC__) || defined(__cplusplus)
+extern  bool_t xdr_User (XDR *, User*);
 extern  bool_t xdr_client_message (XDR *, client_message*);
+extern  bool_t xdr_Joiner (XDR *, Joiner*);
+extern  bool_t xdr_Quiz (XDR *, Quiz*);
+extern  bool_t xdr_game (XDR *, game*);
 extern  bool_t xdr_server_message (XDR *, server_message*);
 
 #else /* K&R C */
+extern bool_t xdr_User ();
 extern bool_t xdr_client_message ();
+extern bool_t xdr_Joiner ();
+extern bool_t xdr_Quiz ();
+extern bool_t xdr_game ();
 extern bool_t xdr_server_message ();
 
 #endif /* K&R C */

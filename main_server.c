@@ -5,16 +5,120 @@
  */
 
 #include "main.h"
+#include "validate.h"
+#include <time.h>
+#include <stdlib.h>
+#include <string.h>
+
+struct game current_game;
+
+void addUser(client_message *argp) {
+   FILE *fp = fopen("./database/user.db","a+");
+   if(fp != NULL) {
+       char data[517]  = "";
+       strcpy(data,argp->current_user.name);
+       strcat(data,DELIMITER);
+       strcat(data,argp->current_user.pass);
+       strcat(data,"\n");
+       fputs(data,fp);
+       fclose(fp);
+   }
+   printf("Added to user.db\nName: %s\nPass: %s\n",argp->current_user.name,argp->current_user.pass);
+}
+
+struct Quiz get_the_quiz() {
+  struct Quiz quiz;
+  char question[100];
+  char answer[100];
+  char temp[100];
+  char *tokens;
+  char line[100];
+  FILE *fp = fopen("./database/quiz.db","r");
+  srand(time(NULL));
+  if(fp!=NULL) {
+    if (fgets(temp, 100, fp)!=NULL) {
+      strcpy(line,temp);
+      while (fgets(temp, 100, fp) != NULL) {
+        if (rand()%3 == 0) strcpy(line,temp);
+      }
+    }
+    fclose(fp);
+  } else printf("open file error\n");
+  tokens = strtok(line, DELIMITER);
+  if (tokens != NULL) {
+    strcpy(quiz.question, tokens);
+  }
+  tokens = strtok(NULL,DELIMITER);
+  tokens[strlen(tokens)-1] = '\0';
+  if (tokens != NULL) {
+    strcpy(quiz.answer, tokens);
+  }
+  printf("Got the quiz from quiz.db.\n");
+  printf("Q: %s\n",quiz.question );
+  printf("A: %s\n",quiz.answer );
+  return quiz;
+}
+
+char * setdefaultAnswer(char* answer) {
+  int i;
+  char *defaultAnswer = answer;
+  for (i=0;i<strlen(answer);i++) {
+    if (defaultAnswer[i]!=' ') {
+      defaultAnswer[i] = '*';
+    }
+  }
+  return defaultAnswer;
+}
+
+char lower_to_upper(char lower) {
+  char upper;
+  if (lower >= 'a' && lower <= 'z') {
+    upper = ('A' + lower - 'a');
+    return upper;
+  }
+  else return lower;
+}
+
+int get_score(int spin_code, int score){
+  switch (spin_code) {
+    case 0:
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 7:
+		case 8:
+		case 9:
+      score+=(spin_code+1)*100;
+      printf("user's score become %d\n",score );
+      return score;
+		case THE_DOUBLE:
+      score*=2;
+      printf("user's score become %d\n",score );
+      return score;
+		case THE_DIVIDE:
+      score/=2;
+      printf("user's score become %d\n",score );
+      return score;
+		// case LOST_A_TURN: break;
+		// case GAIN_A_TURN: break;
+		// case LUCKY: break;
+		default: break;
+	}
+  return current_game.joiners[0].score;
+}
 
 server_message *
 register_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
+	if(!isRegisteredUsername(argp))
+	{
+		addUser(argp);
+		result.opcode = 00;
+	} else result.opcode = 01;
 	return &result;
 }
 
@@ -22,12 +126,10 @@ server_message *
 login_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
-	return &result;
+  if(isValidUser(argp)) {
+    result.opcode = 10;
+  } else result.opcode = 11;
+  return &result;
 }
 
 server_message *
@@ -45,20 +147,25 @@ logout_1_svc(client_message *argp, struct svc_req *rqstp)
 server_message *
 join_1_svc(client_message *argp, struct svc_req *rqstp)
 {
-	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
+  static server_message result;
+  result.opcode = 40;
+  result.current_game.status = GAME_RUNNING;
+  struct Quiz quiz = get_the_quiz();
+  result.current_game.quiz = quiz;
+  strcpy(result.current_game.answerAtMoment, setdefaultAnswer(quiz.answer));
+  result.current_game.joiners[0].user = argp->current_user;
+  result.current_game.joiners[0].score = 0;
+  result.current_game.joiners[0].in_game = PLAYING_GAME;
+  current_game = result.current_game;
 	return &result;
 }
 
 server_message *
 spin_1_svc(client_message *argp, struct svc_req *rqstp)
 {
-	static server_message  result;
-	result.opcode = rand()%15;
+  static server_message result;
+	result.opcode = rand()%12;
+  printf("User spin and got spin_code %d\n",result.opcode );
 	return &result;
 }
 
@@ -78,11 +185,49 @@ server_message *
 guess_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
+  int i=0;
+  current_game.status = GAME_OVER;
+  int spin_code;
+  char *character;
+  char *answer = current_game.quiz.answer;
+  // printf("%s\n",argp->parameter );
+  // printf("%s\n",current_game.quiz.answer );
+  // printf("%s\n",current_game.answerAtMoment );
 
-	/*
-	 * insert server code here
-	 */
+  spin_code = atoi(strtok(argp->parameter, DELIMITER));
+  character = strtok(NULL,DELIMITER);
+  printf("\nUser guess '%c'.\n",*character );
+  *character = lower_to_upper(*character);
+  result.opcode = 71;
+  for(i=0;i<strlen(current_game.answerAtMoment);i++) {
+    if (current_game.answerAtMoment[i]=='*'){
+      if (answer[i] == character[0]) {
+        current_game.answerAtMoment[i] = character[0];
+        result.opcode = 70;
+        printf("Correct.\n");
+        if (spin_code != THE_DIVIDE) {
+          current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
+        }
+      }
+    }
+  }
 
+  if (result.opcode == 71) {
+    printf("Incorrect.\n");
+     if ( spin_code == THE_DIVIDE) {
+       printf(" User got divide so the score will be divided by 2.\n");
+       current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
+     }
+  }
+  //check if the answer is completed?
+  for(i=0;i<strlen(current_game.answerAtMoment);i++) {
+    if (current_game.answerAtMoment[i]=='*'){
+      current_game.status = GAME_RUNNING;
+    }
+  }
+  if (current_game.status == GAME_OVER) result.opcode = 72;
+  result.current_game = current_game;
+  // printf("answerAtMoment:%s.\n",result.current_game.answerAtMoment );
 	return &result;
 }
 
@@ -90,52 +235,25 @@ server_message *
 guess_all_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
+  char full_answer[100];
+  int i;
+  printf("User guess: %s.\n",argp->parameter );
+  for (int i = 0; i < strlen(argp->parameter); i++) {
+    if (full_answer[i]!=' ')  full_answer[i] = lower_to_upper(argp->parameter[i]);
+  }
+  if (strcmp(full_answer,current_game.quiz.answer) == 0) {
+    result.opcode = COMPLETED;
+    current_game.status = GAME_OVER;
+  } else {
+    result.opcode = INCORRECT;
+    current_game.status = GAME_RUNNING;
+  }
+  result.current_game = current_game;
 	return &result;
 }
 
 server_message *
 surender_1_svc(client_message *argp, struct svc_req *rqstp)
-{
-	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
-	return &result;
-}
-
-server_message *
-function1_1_svc(client_message *argp, struct svc_req *rqstp)
-{
-	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
-	return &result;
-}
-
-server_message *
-function2_1_svc(client_message *argp, struct svc_req *rqstp)
-{
-	static server_message  result;
-
-	/*
-	 * insert server code here
-	 */
-
-	return &result;
-}
-
-server_message *
-function3_1_svc(client_message *argp, struct svc_req *rqstp)
 {
 	static server_message  result;
 
