@@ -43,7 +43,7 @@ bool isValidUser(client_message *argp) {
     char input[517];
     fp = fopen("./database/user.db","r");
     if(fp == NULL){
-	return FALSE;
+			return FALSE;
     }
 
     strcpy(input,argp->current_user.name);
@@ -51,10 +51,11 @@ bool isValidUser(client_message *argp) {
     strcat(input,argp->current_user.pass);
     strcat(input,"\n");
     while(fgets(temp, 517, fp) != NULL) {
-	if((strcmp(temp, input)) == 0) {
-	    fclose(fp);
-	    return TRUE;
-	}
+			if((strcmp(temp, input)) == 0) {
+		    fclose(fp);
+				printf("User %s logined.\n", argp->current_user.name);
+		    return TRUE;
+			}
     }
     fclose(fp);
     return FALSE;

@@ -74,6 +74,7 @@ void play_game(CLIENT *clnt) {
           // sleep(1);
           system("clear");
           print_spin_result(result_5->opcode);
+          sleep(1);
           switch (result_5->opcode) {
             case 0: game_status = guess(0,clnt); break;
         		case 1: game_status = guess(1,clnt); break;
@@ -89,7 +90,7 @@ void play_game(CLIENT *clnt) {
         		case THE_DIVIDE: game_status = guess(THE_DIVIDE,clnt); break;
         		// case LOST_A_TURN: game_status = guess(LOST_A_TURN,clnt); break;
         		// case GAIN_A_TURN: game_status = guess(GAIN_A_TURN,clnt); break;
-        		case LUCKY: game_status = guess(LUCKY,clnt); break;
+        		// case LUCKY: game_status = guess(LUCKY,clnt); break;
         		default: break;
           }
         }
@@ -112,6 +113,7 @@ void play_game(CLIENT *clnt) {
               sleep(2);
             } else {
               printf("Your answer is wrong. See you again!\n" );
+              sleep(2);
             }
             game_status = GAME_OVER;
           }
@@ -220,6 +222,7 @@ wheel_prog_1(char *host)
     choice = validate_choice(&choice,'1','2');
     switch (choice) {
       case '1'://join
+        system("clear");
         print_welcome();
         strcpy(join_1_arg.command,"JOIN");
         result_4 = join_1(&join_1_arg, clnt);

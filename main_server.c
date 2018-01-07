@@ -23,6 +23,7 @@ void addUser(client_message *argp) {
        fputs(data,fp);
        fclose(fp);
    }
+   printf("Added to user.db\nName: %s\nPass: %s\n",argp->current_user.name,argp->current_user.pass);
 }
 
 struct Quiz get_the_quiz() {
@@ -52,6 +53,9 @@ struct Quiz get_the_quiz() {
   if (tokens != NULL) {
     strcpy(quiz.answer, tokens);
   }
+  printf("Got the quiz from quiz.db.\n");
+  printf("Q: %s\n",quiz.question );
+  printf("A: %s\n",quiz.answer );
   return quiz;
 }
 
@@ -88,12 +92,19 @@ int get_score(int spin_code, int score){
 		case 8:
 		case 9:
       score+=(spin_code+1)*100;
+      printf("user's score become %d\n",score );
       return score;
-		case THE_DOUBLE: return score*=2;
-		case THE_DIVIDE: return score/=2;
+		case THE_DOUBLE:
+      score*=2;
+      printf("user's score become %d\n",score );
+      return score;
+		case THE_DIVIDE:
+      score/=2;
+      printf("user's score become %d\n",score );
+      return score;
 		// case LOST_A_TURN: break;
 		// case GAIN_A_TURN: break;
-		case LUCKY: break;
+		// case LUCKY: break;
 		default: break;
 	}
   return current_game.joiners[0].score;
@@ -153,7 +164,8 @@ server_message *
 spin_1_svc(client_message *argp, struct svc_req *rqstp)
 {
   static server_message result;
-	result.opcode = rand()%13;
+	result.opcode = rand()%12;
+  printf("User spin and got spin_code %d\n",result.opcode );
 	return &result;
 }
 
@@ -184,6 +196,7 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
 
   spin_code = atoi(strtok(argp->parameter, DELIMITER));
   character = strtok(NULL,DELIMITER);
+  printf("\nUser guess '%c'.\n",*character );
   *character = lower_to_upper(*character);
   result.opcode = 71;
   for(i=0;i<strlen(current_game.answerAtMoment);i++) {
@@ -191,6 +204,7 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
       if (answer[i] == character[0]) {
         current_game.answerAtMoment[i] = character[0];
         result.opcode = 70;
+        printf("Correct.\n");
         if (spin_code != THE_DIVIDE) {
           current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
         }
@@ -198,8 +212,12 @@ guess_1_svc(client_message *argp, struct svc_req *rqstp)
     }
   }
 
-  if (result.opcode == 71 && spin_code == THE_DIVIDE) {
-    current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
+  if (result.opcode == 71) {
+    printf("Incorrect.\n");
+     if ( spin_code == THE_DIVIDE) {
+       printf(" User got divide so the score will be divided by 2.\n");
+       current_game.joiners[0].score = get_score(spin_code, current_game.joiners[0].score);
+     }
   }
   //check if the answer is completed?
   for(i=0;i<strlen(current_game.answerAtMoment);i++) {
@@ -219,8 +237,9 @@ guess_all_1_svc(client_message *argp, struct svc_req *rqstp)
 	static server_message  result;
   char full_answer[100];
   int i;
+  printf("User guess: %s.\n",argp->parameter );
   for (int i = 0; i < strlen(argp->parameter); i++) {
-    full_answer[i] = lower_to_upper(argp->parameter[i]);
+    if (full_answer[i]!=' ')  full_answer[i] = lower_to_upper(argp->parameter[i]);
   }
   if (strcmp(full_answer,current_game.quiz.answer) == 0) {
     result.opcode = COMPLETED;
