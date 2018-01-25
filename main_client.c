@@ -9,6 +9,7 @@
 #include "main.h"
 #include "print.h"
 #include "validate.h"
+#include <gtk/gtk.h>
 
 struct Session{
     struct User user;
@@ -275,6 +276,13 @@ main (int argc, char *argv[])
 		exit (1);
 	}
 	host = argv[1];
+
+  GtkWidget *window;
+  gtk_init (&argc, &argv);
+  window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_widget_show  (window);
+  gtk_main ();
+
 	wheel_prog_1 (host);
 exit (0);
 }

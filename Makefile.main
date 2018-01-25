@@ -21,6 +21,7 @@ OBJECTS_SVC = $(SOURCES_SVC.c:%.c=%.o) $(TARGETS_SVC.c:%.c=%.o)
 # Compiler flags
 
 CFLAGS += -g
+CXXFLAGS = `pkg-config --cflags --libs gtk+-2.0`
 LDLIBS += -lnsl
 RPCGENFLAGS =
 
