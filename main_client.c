@@ -126,8 +126,7 @@ void play_game(CLIENT *clnt) {
   } while (choice!='3' && game_status == GAME_RUNNING);
 }
 
-void
-wheel_prog_1(char *host)
+void wheel_prog_1(char *host)
 {
 	CLIENT *clnt;
 	server_message  *result_1;
@@ -265,6 +264,53 @@ wheel_prog_1(char *host)
 #endif	 /* DEBUG */
 }
 
+void welcome(int argc,char *argv[])
+{
+	GtkWidget *w;
+	GtkWidget *fix;
+	GtkWidget *entry1;
+	GtkWidget *entry2;
+	GtkWidget *label1;
+	GtkWidget *label2;
+	GtkWidget *ok;
+
+	gtk_init(&argc,&argv);
+	w=gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_position(GTK_WINDOW(w),GTK_WIN_POS_CENTER);
+	gtk_window_set_title(GTK_WINDOW(w),"Bổ sung từ mới");
+	gtk_window_set_default_size(GTK_WINDOW(w),250,400);
+	g_signal_connect(w,"destroy",gtk_main_quit,NULL);
+
+	fix=gtk_fixed_new();
+	gtk_container_add(GTK_CONTAINER(w),fix);
+
+	label1=gtk_label_new("Nhập từ Tiếng Anh:");
+	gtk_label_set_justify(GTK_LABEL(label1),GTK_JUSTIFY_LEFT);
+	gtk_fixed_put(GTK_FIXED(fix),label1,10,30);
+
+	label2=gtk_label_new("Nhập nghĩa Tiếng Việt:");
+	gtk_label_set_justify(GTK_LABEL(label2),GTK_JUSTIFY_LEFT);
+	gtk_fixed_put(GTK_FIXED(fix),label2,10,90);
+
+	entry1=gtk_text_view_new();
+	gtk_widget_set_size_request(entry1,200,30);
+	gtk_fixed_put(GTK_FIXED(fix),entry1,10,50);
+	tb1=gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry1));
+
+	entry2=gtk_text_view_new();
+	gtk_widget_set_size_request(entry2,200,220);
+	gtk_fixed_put(GTK_FIXED(fix),entry2,10,110);
+	tb2=gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry2));
+  //
+	// ok=gtk_button_new_with_label("OK");
+	// gtk_widget_set_size_request(ok,100,30);
+	// gtk_fixed_put(GTK_FIXED(fix),ok,75,360);
+	// g_signal_connect(ok,"clicked",G_CALLBACK(add),w);
+
+	gtk_widget_show_all(w);
+	gtk_main();
+}
+
 
 int
 main (int argc, char *argv[])
@@ -278,11 +324,25 @@ main (int argc, char *argv[])
 	host = argv[1];
 
   GtkWidget *window;
+  GtkWidget *startGameBtn;
   gtk_init (&argc, &argv);
+
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-  gtk_widget_show  (window);
+  gtk_window_set_position(GTK_WINDOW(window),GTK_WIN_POS_CENTER);
+  gtk_window_set_title(GTK_WINDOW(window),"WHEEL OF FORTUNE");
+  gtk_window_set_default_size(GTK_WINDOW(window),650,500);
+  gtk_container_set_border_width (GTK_CONTAINER (window), 100);
+  g_signal_connect(window,"destroy",gtk_main_quit,NULL);
+
+  startGameBtn = gtk_button_new_with_label ("START GAME");
+  g_signal_connect(startGameBtn,"clicked",G_CALLBACK(welcome),NULL);
+
+  gtk_container_add (GTK_CONTAINER (window), startGameBtn);
+
+  gtk_widget_show_all (window);
+
   gtk_main ();
 
-	wheel_prog_1 (host);
-exit (0);
+	// wheel_prog_1 (host);
+  exit (0);
 }
