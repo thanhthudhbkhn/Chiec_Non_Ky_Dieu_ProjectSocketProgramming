@@ -264,6 +264,13 @@ void wheel_prog_1(char *host)
 #endif	 /* DEBUG */
 }
 
+void destroy(GtkWidget* button,gpointer label){
+    gtk_widget_hide(button);
+    // g_print ("hide\n");
+    gtk_widget_show(label);
+
+}
+
 void welcome(int argc,char *argv[])
 {
 	GtkWidget *w;
@@ -295,12 +302,12 @@ void welcome(int argc,char *argv[])
 	entry1=gtk_text_view_new();
 	gtk_widget_set_size_request(entry1,200,30);
 	gtk_fixed_put(GTK_FIXED(fix),entry1,10,50);
-	tb1=gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry1));
+	// tb1=gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry1));
 
 	entry2=gtk_text_view_new();
 	gtk_widget_set_size_request(entry2,200,220);
 	gtk_fixed_put(GTK_FIXED(fix),entry2,10,110);
-	tb2=gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry2));
+	// tb2=gtk_text_view_get_buffer(GTK_TEXT_VIEW(entry2));
   //
 	// ok=gtk_button_new_with_label("OK");
 	// gtk_widget_set_size_request(ok,100,30);
@@ -323,7 +330,7 @@ main (int argc, char *argv[])
 	}
 	host = argv[1];
 
-  GtkWidget *window;
+  GtkWidget *window,*label,*fixed;
   GtkWidget *startGameBtn;
   gtk_init (&argc, &argv);
 
@@ -334,12 +341,21 @@ main (int argc, char *argv[])
   gtk_container_set_border_width (GTK_CONTAINER (window), 100);
   g_signal_connect(window,"destroy",gtk_main_quit,NULL);
 
-  startGameBtn = gtk_button_new_with_label ("START GAME");
-  g_signal_connect(startGameBtn,"clicked",G_CALLBACK(welcome),NULL);
+  fixed = gtk_fixed_new();
 
-  gtk_container_add (GTK_CONTAINER (window), startGameBtn);
+  label = gtk_label_new("BOOM!!");
+
+  startGameBtn = gtk_button_new_with_mnemonic("START GAME");
+  gtk_widget_set_size_request(startGameBtn,200,30);
+
+  gtk_fixed_put(GTK_FIXED(fixed),startGameBtn,0,0);
+  gtk_fixed_put(GTK_FIXED(fixed),label,300,300);
+
+  g_signal_connect_swapped(startGameBtn,"clicked",G_CALLBACK(destroy),startGameBtn);
+  gtk_container_add(GTK_CONTAINER(window),fixed);
 
   gtk_widget_show_all (window);
+  gtk_widget_hide(label);
 
   gtk_main ();
 
