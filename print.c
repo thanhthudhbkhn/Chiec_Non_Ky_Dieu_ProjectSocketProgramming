@@ -25,7 +25,7 @@ void print_spin_result(int spin_code){
 
 void print_project_info() {
 	printf("Network Programming Project - Jan 2018\nWHEEL OF FORTUNE\n");
-	printf("Phan Thanh Thu - 20144424\nPhung Van Khanh - 20142319\n");
+	printf("Phan Thanh Thu - 20144424\n");
 	printf("----------------------------------------------------------------------\n" );
 }
 

@@ -346,10 +346,10 @@ main (int argc, char *argv[])
   label = gtk_label_new("BOOM!!");
 
   startGameBtn = gtk_button_new_with_mnemonic("START GAME");
-  gtk_widget_set_size_request(startGameBtn,200,30);
+  gtk_widget_set_size_request(startGameBtn,300,45);
 
-  gtk_fixed_put(GTK_FIXED(fixed),startGameBtn,0,0);
-  gtk_fixed_put(GTK_FIXED(fixed),label,300,300);
+  gtk_fixed_put(GTK_FIXED(fixed),startGameBtn,70,200);
+  gtk_fixed_put(GTK_FIXED(fixed),label,50,50);
 
   g_signal_connect_swapped(startGameBtn,"clicked",G_CALLBACK(destroy),startGameBtn);
   gtk_container_add(GTK_CONTAINER(window),fixed);
