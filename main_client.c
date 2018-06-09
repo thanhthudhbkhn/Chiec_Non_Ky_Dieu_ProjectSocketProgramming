@@ -330,32 +330,36 @@ main (int argc, char *argv[])
 	}
 	host = argv[1];
 
-  GtkWidget *window,*label,*fixed;
-  GtkWidget *startGameBtn;
+  GtkWidget *window, *label, *fixed, *startGameBtn, *image;
+  GdkColor color;
   gtk_init (&argc, &argv);
 
   window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_position(GTK_WINDOW(window),GTK_WIN_POS_CENTER);
   gtk_window_set_title(GTK_WINDOW(window),"WHEEL OF FORTUNE");
-  gtk_window_set_default_size(GTK_WINDOW(window),650,500);
-  gtk_container_set_border_width (GTK_CONTAINER (window), 100);
+  gtk_window_set_default_size(GTK_WINDOW(window),800,450);
+  // gtk_container_set_border_width (GTK_CONTAINER (window), 20);
   g_signal_connect(window,"destroy",gtk_main_quit,NULL);
 
   fixed = gtk_fixed_new();
 
-  label = gtk_label_new("BOOM!!");
+  image = gtk_image_new_from_file ("database/top_page.jpg");
+
+  // label = gtk_label_new("BOOM!!");
 
   startGameBtn = gtk_button_new_with_mnemonic("START GAME");
   gtk_widget_set_size_request(startGameBtn,300,45);
+  gdk_color_parse ("khaki", &color);
+  gtk_widget_modify_bg ( GTK_WIDGET(startGameBtn), GTK_STATE_NORMAL, &color);
 
-  gtk_fixed_put(GTK_FIXED(fixed),startGameBtn,70,200);
-  gtk_fixed_put(GTK_FIXED(fixed),label,50,50);
+  gtk_fixed_put(GTK_FIXED(fixed),image,0,0);
+  gtk_fixed_put(GTK_FIXED(fixed),startGameBtn,250,350);
+  // gtk_fixed_put(GTK_FIXED(fixed),label,50,50);
 
   g_signal_connect_swapped(startGameBtn,"clicked",G_CALLBACK(destroy),startGameBtn);
   gtk_container_add(GTK_CONTAINER(window),fixed);
 
   gtk_widget_show_all (window);
-  gtk_widget_hide(label);
 
   gtk_main ();
 
